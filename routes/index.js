@@ -1,24 +1,21 @@
-var express = require('express')
-var router = express.Router();
-var mongoose = require('mongoose')
-var User = mongoose.model('User')
-var auth = require('./auth');
+var router = require('express').Router(),
+    secure = require('./secure')
 
-// Public-facing API routes
-router.use(require('./api'));
+router.use(require('./blocks'))
+router.use(require('./users'))
+router.use('*', secure, require('./404'))
 
-/*
-// Home page route
-router.get('*', function (req, res) {
-    if (req.user) {
-        next('/users/login')
-    } else {
-        User.findById(req.payload.id)
-        .then((user) => {
-            res.render('index.html', {user: user})
-        })
+router.use((err, req, res, next) => {
+    if (err.name === 'ValidationError') {
+        return res.status(422).json({
+            errors: Object.keys(err.errors).reduce(function(errors, key){
+            errors[key] = err.errors[key].message;
+    
+            return errors;
+            }, {})
+        });
     }
-})
-*/
+    return next(err);
+});
 
-module.exports = router;
+module.exports = router

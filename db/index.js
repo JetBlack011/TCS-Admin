@@ -1,10 +1,10 @@
-mongoose = require('mongoose')
-
+var mongoose = require('mongoose')
+var secret = require('../secret')
 var isProduction = process.env.NODE_ENV === 'production'
 
 // Initialize models
-require('./models/Post')
 require('./models/User')
+require('./models/Block')
 require('./config')
 require('./config/passport')
 
@@ -21,7 +21,7 @@ if (isProduction) {
         console.error('Failed to connect to database!\n' + err)
     })
 } else {
-    mongoose.connect('mongodb://localhost:27017/TCS-Admin', { useNewUrlParser: true })
+    mongoose.connect(secret.mongodbURI, { useNewUrlParser: true })
     .then(() => {
         console.log('Database connection established')
     })
@@ -30,3 +30,5 @@ if (isProduction) {
     })
     mongoose.set('debug', true)
 }
+
+mongoose.set('useCreateIndex', true)

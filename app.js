@@ -1,14 +1,16 @@
 // Configure express and application
-var express = require('express')
-var session = require('express-session')
-var bodyParser = require('body-parser')
-var app = express()
+var express = require('express'),
+    session = require('express-session'),
+    bodyParser = require('body-parser'),
+    app = express(),
+    passport = require('passport')
 
 app.engine('html', require('ejs').renderFile)
 app.set('view engine', 'html')
 
 // Enviornment management
-var isProduction = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === 'production'
+const PORT = isProduction ? 80 : 8000;
 
 app.use(require('morgan')('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -16,11 +18,12 @@ app.use(bodyParser.json())
 
 // Configure and connect to database
 require('./db')
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }))
 
 app.use(require('method-override')())
 app.use('/public', express.static(__dirname + '\\public'))
-
-app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }))
 
 // Routes
 app.use(require('./routes'))
@@ -47,7 +50,7 @@ if (!isProduction) {
     })
 }
 
-// Listen on port 8000
-app.listen(8000, function() {
-    console.log('app listening on port 8000')
+// Listen on port 8000 or port 80 based on deployment mode
+app.listen(PORT, function() {
+    console.log('app listening on port ' + PORT)
 })
