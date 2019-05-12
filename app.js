@@ -1,6 +1,6 @@
 // Configure express and application
 var express = require('express'),
-    session = require('express-session'),
+    session = require('cookie-session'),
     bodyParser = require('body-parser'),
     app = express(),
     passport = require('passport')
@@ -11,19 +11,24 @@ app.set('view engine', 'html')
 // Enviornment management
 const isProduction = process.env.NODE_ENV === 'production'
 const PORT = isProduction ? 80 : 8000;
+const secret = isProduction ? process.env.SECRET : 'secret'
 
 app.use(require('morgan')('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// Configure and connect to database
-require('./db')
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }))
-
 app.use(require('method-override')())
 app.use('/public', express.static(__dirname + '\\public'))
+
+// Configure database and session middleware
+require('./db')
+app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }))
+app.use(passport.initialize());
+app.use(passport.session());
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next()
+})
 
 // Routes
 app.use(require('./routes'))

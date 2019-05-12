@@ -1,30 +1,24 @@
 
 /* BASIC */
 
+:root {
+    --dark-green: #209e30;
+    --light-green: #29c23e;
+}
+
 html {
     background-color: #ffffff;
 }
 
 body {
-    font-family: "Poppins", sans-serif;
-    height: 100%;
+    height: 100vh;
 }
 
 a {
-    color: #000000;
+    color: black;
     display:inline-block;
     text-decoration: none;
     font-weight: 400;
-}
-
-h2 {
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    display:inline-block;
-    margin: 40px 8px 10px 8px; 
-    color: #cccccc;
 }
 
 .bd-placeholder-img {
@@ -40,15 +34,4 @@ h2 {
     .bd-placeholder-img-lg {
         font-size: 3.5rem;
     }
-}
-  
-/* TABS */
-
-h2.inactive {
-    color: #cccccc;
-}
-
-h2.active {
-    color: #0d0d0d;
-    border-bottom: 2px solid #5fbae9;
 }

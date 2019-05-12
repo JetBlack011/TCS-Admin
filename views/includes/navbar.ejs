@@ -1,0 +1,29 @@
+<!-- Standard Navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/#">TCS Admin</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li id="navBlock" class="nav-item">
+          <a class="nav-link" href="/blocks/add">Block<span class="sr-only"></span></a>
+        </li>
+        <li id="navRemove" class="nav-item">
+          <a class="nav-link" href="/blocks/remove">Remove<span class="sr-only"></span></a>
+        </li>
+        <li id="navLogout" class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#logoutModal" href="#">Logout<span class="sr-only"></span></a>
+        </li>
+      </ul>
+      <% if (user.role === "admin") { %>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Admin</a>
+        </li>
+      </ul>
+      <% } %>
+    </div>
+  </nav>
+  <script src="/public/js/navbar.js"></script>

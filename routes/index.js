@@ -1,9 +1,9 @@
 var router = require('express').Router(),
-    secure = require('./secure')
+    auth = require('./auth')
 
-router.use(require('./blocks'))
-router.use(require('./users'))
-router.use('*', secure, require('./404'))
+router.use('/', require('./landing'))
+router.use(require('./api'))
+router.use('*', auth.user, require('./404'))
 
 router.use((err, req, res, next) => {
     if (err.name === 'ValidationError') {

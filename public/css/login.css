@@ -8,28 +8,30 @@
     justify-content: center;
     width: 100%;
     min-height: 100%;
-    padding: 20px;
-}
-
-#icon {
-    margin: 10px;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+    margin: auto;
+    overflow: hidden;
 }
 
 #formContent {
     -webkit-border-radius: 10px 10px 10px 10px;
     border-radius: 10px 10px 10px 10px;
     background: #fff;
-    padding: 30px;
     width: 90%;
     max-width: 450px;
     position: relative;
     padding: 0px;
     -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
     box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    font-size: 1.6vh;
     text-align: center;
 }
 
 #formFooter {
+    margin-top: 15px;
     background-color: #f6f6f6;
     border-top: 1px solid #dce8f1;
     padding: 25px;
@@ -38,10 +40,14 @@
     border-radius: 0 0 10px 10px;
 }
 
+#err {
+    font-size: 1.7vh;
+}
+
 /* FORM TYPOGRAPHY*/
 
 input[type=button], input[type=submit], input[type=reset]  {
-    background-color: #29c23e;
+    background-color: var(--light-green);
     border: none;
     color: white;
     padding: 15px 80px;
@@ -49,12 +55,12 @@ input[type=button], input[type=submit], input[type=reset]  {
     text-decoration: none;
     display: inline-block;
     text-transform: uppercase;
-    font-size: 13px;
+    font-size: 1.5vh;
     -webkit-box-shadow: 0 10px 30px 0 rgba(41,194,62,0.4);
     box-shadow: 0 10px 30px 0 rgba(41,194,62,0.4);
     -webkit-border-radius: 5px 5px 5px 5px;
     border-radius: 5px 5px 5px 5px;
-    margin: 5px 20px 40px 20px;
+    margin: 5px 20px 0px 20px;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -ms-transition: all 0.3s ease-in-out;
@@ -63,7 +69,7 @@ input[type=button], input[type=submit], input[type=reset]  {
 }
 
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
-    background-color: #209e30;
+    background-color: var(--dark-green);
 }
 
 input[type=button]:active, input[type=submit]:active, input[type=reset]:active  {
@@ -82,7 +88,7 @@ input[type=text], input[type=password] {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 1.6vh;
     margin: 5px;
     width: 85%;
     border: 2px solid #f6f6f6;
@@ -102,6 +108,32 @@ input[type=text]:focus, input[type=password]:focus {
 
 input[type=text]:placeholder, input[type=password]:placeholder {
     color: #cccccc;
+}
+
+/* RWD elements for mobile users */
+
+@media screen and (max-width: 700px) {
+    #formContent {
+        max-width: 90vw;
+        -webkit-box-shadow: 0 5px 10px 0 rgba(0,0,0,0.3);
+        box-shadow: 0 5px 10px 0 rgba(0,0,0,0.3);
+    }
+
+    #formFooter {
+        padding: 5vw;
+    }
+
+    #err {
+        font-size: 3vw;
+    }
+
+    input[type=button], input[type=submit], input[type=reset]  {
+        font-size: 2.5vw;
+    }
+
+    input[type=text], input[type=password] {
+        font-size: 2.5vw;
+    }
 }
 
 /* ANIMATIONS */
@@ -217,6 +249,8 @@ input[type=text]:placeholder, input[type=password]:placeholder {
 } 
 
 #icon {
+    margin-top: 10px;
+    margin-bottom: 10px;
     width:60%;
 }
 
