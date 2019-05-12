@@ -1,4 +1,5 @@
-secret.js
-
 # Dependency directory
 node_modules/
+
+# Temporary credential storage
+secret.js
