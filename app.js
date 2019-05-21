@@ -55,7 +55,7 @@ if (!isProduction) {
     })
 }
 
-// Listen on port 8000 or port 80 based on deployment mode
+// Listen on port 8000 or port 80 based on environment
 app.listen(PORT, function() {
     console.log('app listening on port ' + PORT)
 })

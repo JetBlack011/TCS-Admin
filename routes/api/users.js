@@ -5,7 +5,7 @@ var router = require('express').Router(),
 
 router.get('/login', (req, res, next) => {
     if (!req.user) {
-        res.render('login.html')
+        res.render('users/login.html')
     } else {
         res.redirect('/')
     }
@@ -15,7 +15,7 @@ router.post('/login', (req, res, next) => {
         passport.authenticate('local', (err, user, info) => {
             if (err) { return next(err) }
             if (!user) {
-                return res.render('login.html', { err: "Invalid Email or Password!" })
+                return res.render('users/login.html', { err: "Invalid Email or Password" })
             }
             req.logIn(user, err => {
                 if (err) { return next(err) }
@@ -27,14 +27,14 @@ router.post('/login', (req, res, next) => {
 
 router.get('/logout', auth.user, (req, res, next) => {
     req.logout();
-    res.render('login.html', { msg: "Successfully logged out!" })
+    res.render('users/login.html', { msg: "Successfully logged out" })
 })
 
-router.get('/register', auth.admin, (req, res, next) => {
-    res.render('register.html')
+router.get('/users/register', auth.admin, (req, res, next) => {
+    res.render('users/register.html')
 })
 
-router.post('/register', auth.admin, (req, res, next) => {
+router.post('/users/register', auth.admin, (req, res, next) => {
     var user = new User()
 
     user.role = req.body.role
@@ -44,8 +44,18 @@ router.post('/register', auth.admin, (req, res, next) => {
 
     user.save()
     .then(() => {
-        res.redirect('/register/success')
+        res.render('users/register.html', { msg: "<strong>Success</strong> User successfully registered"} )
     }).catch(next)
+})
+
+router.get('/users/delete', auth.admin, (req, res, next) => {
+    User.find({ email: req.body.email })
+    .remove()
+    .exec(err => {
+        if (err) {
+            res.render('users/delete.html', { err: "User was unable to be deleted" })
+        }
+    })
 })
 
 module.exports = router
