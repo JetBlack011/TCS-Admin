@@ -26,7 +26,7 @@ router.post('/login', (req, res, next) => {
 )
 
 router.get('/logout', auth.user, (req, res, next) => {
-    req.logout();
+    req.logout()
     res.render('users/login.html', { msg: "Successfully logged out" })
 })
 
@@ -34,7 +34,7 @@ router.get('/users/register', auth.admin, (req, res, next) => {
     res.render('users/register.html')
 })
 
-router.post('/users/register', auth.admin, (req, res, next) => {
+router.post('/users/register', (req, res, next) => {
     var user = new User()
 
     user.role = req.body.role

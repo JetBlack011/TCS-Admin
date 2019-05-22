@@ -32,7 +32,7 @@ router.post('/blocks/add', auth.user, (req, res, next) => {
                 if (err) { return next(err) }
 
                 var block = new Block()
-                block.url = urlee
+                block.url = url
                 block.save((err, block) => {
                     if (err && err.code === 11000) {
                         return res.render('blocks/add.html', { err: "<strong>" + block.url + "</strong> is already in the Blocklist" })
@@ -55,7 +55,7 @@ router.post('/blocks/remove', auth.user, (req, res, next) => {
         res.render('blocks/remove.html', { err: "URL cannot be blank" })
     } else {
         Block.deleteMany({ url: normalizeUrl(req.body.url) }, (err, data) => {
-            if (err.code === 11000) {
+            if (err && err.code === 11000) {
                 return res.render('blocks/remove.html', { err: "<strong>" + data.url + "</strong> is not in the Blocklist" })
             }
             res.render('blocks/remove.html', { msg: "Success! <strong>" + data.url + "</strong> was removed to Blocklist" })
