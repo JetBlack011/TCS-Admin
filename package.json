@@ -17,9 +17,7 @@
     "mongoose": "^5.5.7",
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.9.1",
-    "normalize-url": "^4.3.0",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "url-exists": "^1.0.3"
+    "passport-local": "^1.0.0"
   }
 }

@@ -12,8 +12,8 @@
         Are you sure you want to logout?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="/logout">Ok</a>
+        <button type="button" class="btn btn-green btn-secondary" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-green btn-primary" href="/logout">OK</a>
       </div>
     </div>
   </div>
@@ -21,54 +21,55 @@
 
 <!-- Error Modal -->
 <% if (locals.err) { %>
-  <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="error-modal-label">Error</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <%- err %>
-          </div>
-          <div class="modal-footer">
-            <a class="btn btn-primary" data-dismiss="modal">Ok</a>
-          </div>
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="error-modal-label">Error</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= err %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-green btn-primary" data-dismiss="modal">OK</button>
         </div>
       </div>
     </div>
-    <script>
-      $(window).on("load", () => {
-        $("#error-modal").modal("show")
-      })
-    </script>
+  </div>
+  <script>
+    $(window).on("load", () => {
+      $("#error-modal").modal("show");
+    })
+  </script>
 <% } %>
 
 <!-- Information Modal -->
 <% if (locals.msg) { %>
-  <div class="modal fade" id="message-modal" tabindex="-1" role="dialog" aria-labelledby="message-modal-label" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="message-modal-label">Info</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <%- msg %>
-          </div>
-          <div class="modal-footer">
-            <a class="btn btn-primary" data-dismiss="modal">Ok</a>
-          </div>
+<div class="modal fade" id="message-modal" tabindex="-1" role="dialog" aria-labelledby="message-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="message-modal-label">Info</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= msg %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-green btn-primary" data-dismiss="modal">OK</button>
         </div>
       </div>
     </div>
-    <script>
-      $(window).on("load", () => {
-        $("#message-modal").modal("show")
-      })
-    </script>
+  </div>
+  <script>
+    $(window).on("load", () => {
+      $("#message-modal").modal("show");
+    })
+  </script>
 <% } %>
+

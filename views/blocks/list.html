@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('../includes/header') %>
+  </head>
+  <body>
+    <main role="main">
+      <%- include('../includes/navbar') %>
+      <% if (locals.blocks && blocks.length !== 0) { %>
+      <table class="table align-middle" id="table-list">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">URL</th>
+            <th scope="col">Remove?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (var i = 0; i < blocks.length; i++) { %>
+          <tr>
+            <th scope="row"><%= i + 1 %></th>
+            <td><%= blocks[i].url %></td>
+            <td><button type="button" class="btn btn-danger" onclick="confirmBlock(<%= i + 1 %>)">x</button></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirm-modal-label">Info</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this URL from the Blocklist?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-green btn-secondary" data-dismiss="modal">Cancel</button>
+              <button class="btn btn-green btn-primary" onclick="removeBlock()">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } else { %>
+      <div class="container vertical-center">
+        <div class="row">
+          <div class="col-md-4">
+            <h2>Add a Block</h2>
+            <p>There are currently no URLs in the Blocklist!</p>
+            <p><a class="btn btn-green btn-secondary down" href="/blocks/add" role="button">Add One</a></p>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </main>
+    <%- include('../includes/footer') %>
+  </body>
+  <script>
+    var url;
+
+    function confirmBlock(tr) {
+      url = $("#table-list tr:eq(" + tr + ") td:eq(0)").text();
+      $("#confirm-modal").modal("show");
+    }
+
+    function removeBlock() {
+      if (url) {
+        $.post("/blocks/remove", { url: url });
+        location.reload();
+      }
+    }
+  </script>
+</html>

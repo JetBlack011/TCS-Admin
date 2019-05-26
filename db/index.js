@@ -3,8 +3,9 @@ var secret = require('../secret')
 var isProduction = process.env.NODE_ENV === 'production'
 
 // Initialize models
-require('./models/User')
 require('./models/Block')
+require('./models/Client')
+require('./models/User')
 require('./config')
 require('./config/passport')
 

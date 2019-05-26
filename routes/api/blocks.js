@@ -1,7 +1,5 @@
 var router = require('express').Router(),
     auth = require('../auth')
-    urlExists = require('url-exists')
-    normalizeUrl = require('normalize-url');
     Block = require('mongoose').model('Block')
 
 router.get('/blocks', (req, res, next) => {
@@ -23,25 +21,18 @@ router.get('/blocks/add', auth.user, (req, res, next) => {
 
 router.post('/blocks/add', auth.user, (req, res, next) => {
     if (!req.body.url) {
-        res.render('blocks/add.html', { err: "URL cannot be blank" })
+        res.render('blocks/add.html', { err: "URL cannot be blank." })
     } else {
-        var url = normalizeUrl(req.body.url)
-        urlExists(url, (err, exists) => {
-            if (exists) {
-                console.log('Adding new block at ' + url)
-                if (err) { return next(err) }
+        var url = req.body.url.toLowerCase()
+        console.log('Adding new block at ' + url)
 
-                var block = new Block()
-                block.url = url
-                block.save((err, block) => {
-                    if (err && err.code === 11000) {
-                        return res.render('blocks/add.html', { err: "<strong>" + block.url + "</strong> is already in the Blocklist" })
-                    }
-                    res.render('blocks/add.html', { msg: "Success! <strong>" + block.url + "</strong> was added to Blocklist" })
-                })
-            } else {
-                res.render('blocks/add.html', { err: "URL does not exist" })
+        var block = new Block()
+        block.url = url
+        block.save((err, block) => {
+            if (err && err.code === 11000) {
+                return res.render('blocks/add.html', { err: "\"" + url + "\" is already in the Blocklist." })
             }
+            res.render('blocks/add.html', { msg: "Success! \"" + url + "\" was added to Blocklist." })
         })
     }
 })
@@ -52,18 +43,26 @@ router.get('/blocks/remove', auth.user, (req, res, next) => {
 
 router.post('/blocks/remove', auth.user, (req, res, next) => {
     if (!req.body.url) {
-        res.render('blocks/remove.html', { err: "URL cannot be blank" })
+        res.render('blocks/remove.html', { err: "URL cannot be blank." })
     } else {
-        Block.deleteMany({ url: normalizeUrl(req.body.url) }, (err, data) => {
+        Block.deleteMany({ url: req.body.url }, (err, data) => {
             if (err && err.code === 11000) {
-                return res.render('blocks/remove.html', { err: "<strong>" + data.url + "</strong> is not in the Blocklist" })
+                return res.render('blocks/remove.html', { err: "\"" + data.url + "\" is not in the Blocklist." })
             }
-            res.render('blocks/remove.html', { msg: "Success! <strong>" + data.url + "</strong> was removed to Blocklist" })
+            res.render('blocks/remove.html', { msg: "Success! \"" + data.url + "\" was removed to Blocklist." })
         })
     }
 })
 
-router.get('/blocks/list', (req, res, next) => {
+router.get('/blocks/list', (req, res) => {
+    Block
+    .find({ })
+    .exec((err, blocks) => {
+        res.render('blocks/list.html', { blocks: blocks })
+    })
+})
+
+router.get('/blocks/list/json', (req, res, next) => {
     Block
     .find({ })
     .exec((err, blocks) => {
@@ -75,5 +74,4 @@ router.get('/blocks/list', (req, res, next) => {
         res.json(urls)
     })
 })
-
 module.exports = router
