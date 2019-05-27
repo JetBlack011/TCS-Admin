@@ -2,6 +2,7 @@
 <html>
   <head>
     <%- include('../includes/header') %>
+    <link rel="stylesheet" href="/public/css/blocks/form.css">
   </head>
   <body>
     <main role="main">
@@ -11,7 +12,7 @@
           <form class="border border-light p-5" method="POST" action="/blocks/remove">
             <div class="text-center">
               <p class="h4 mb-4 fade-in first">Block</p>
-              <p class="fade-in first">Remove a URL to the Blocklist.</p>
+              <p class="fade-in first">Remove a URL from the Blocklist by name.</p>
               <input type="text" name="url" id="url" class="form-control mb-4 fade-in second" placeholder="http://google.com/">
               <button class="btn btn-green btn-block fade-in third" type="submit">Remove</button>
             </div>

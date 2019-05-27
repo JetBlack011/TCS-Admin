@@ -5,5 +5,9 @@ $(document).ready(() => {
         break
     case '/blocks/remove':
         $("#nav-remove").addClass("active")
+        break
+    case '/clients':
+        $("#nav-clients").addClass("active")
+        break
     }
 })

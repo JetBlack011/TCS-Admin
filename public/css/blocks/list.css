@@ -1,0 +1,10 @@
+.vertical-center {
+    position: absolute;
+    right: 1vw;
+    top: 50vh;
+}
+
+table {
+    margin: auto;
+    width: 50% !important;
+}

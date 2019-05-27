@@ -1,7 +1,9 @@
 var router = require('express').Router(),
     auth = require('./auth')
 
-router.use('/', require('./landing'))
+router.get('/', auth.user, (req, res) => {
+    res.render('index.html')
+})
 router.use(require('./api'))
 router.use('*', auth.user, require('./404'))
 

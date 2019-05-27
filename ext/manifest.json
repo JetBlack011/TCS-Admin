@@ -1,0 +1,28 @@
+{
+    "name": "TCS-Admin",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "description": "This app manages administrative activity on theCoderSchool's Chromebooks",
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "background": {
+        "scripts": [
+            "js/jquery/jquery-3.4.1.min.js",
+            "js/background.js",
+            "js/helpers.js",
+            "js/blocks.js",
+            "js/cnc.js"
+        ],
+        "persistent": true
+    },
+    "permissions": [
+        "storage",
+        "tts",
+        "history",
+        "tabs",
+        "http://127.0.0.1:8000/"
+    ]
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('../includes/header') %>
+    <link rel="stylesheet" href="/public/css/clients/index.css">
+  </head>
+  <body>
+    <main role="main">
+      <%- include('../includes/navbar') %>
+        <div class="row mx-5">
+          <div class="col">
+            <h1 class="display-4 text-center">Stats</h1>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <th>Clients</th>
+                  <td id="client-count">0</td>
+                </tr>
+                <tr>
+                  <th>Open Tabs</th>
+                  <td id="tab-count">0</td>
+                </tr>
+                <tr>
+                  <th>History Entires</th>
+                  <td id="history-count">0</td>
+                </tr>
+                <tr>
+                  <th>Successful Blocks</th>
+                  <td id="block-count">0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-8 scrollable">
+              wide
+          </div>
+        </div>
+    </main>
+    <%- include('../includes/footer') %>
+  </body>
+  <script>
+  function refresh() {
+    $.getJSON("/clients/stats", function (data) {
+      $("#client-count").text(data.clientCount);
+      $("#tab-count").text(data.tabCount);
+      $("#history-count").text(data.historyCount);
+      $("#block-count").text(data.blockCount);
+    })
+  }
+  refresh();
+  setInterval(refresh, 1000);
+  </script>
+</html>
