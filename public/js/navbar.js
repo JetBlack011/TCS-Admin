@@ -1,13 +1,10 @@
 $(document).ready(() => {
-    switch (window.location.pathname) {
-    case '/blocks/add':
-        $("#nav-block").addClass("active")
-        break
-    case '/blocks/remove':
-        $("#nav-remove").addClass("active")
-        break
-    case '/clients':
-        $("#nav-clients").addClass("active")
-        break
+    var pathname = window.location.pathname;
+    if (pathname.startsWith('/blocks/add')) {
+        $("#nav-block").addClass("active");
+    } else if (pathname.startsWith('/blocks/remove')) {
+        $("#nav-remove").addClass("active");
+    } else if (pathname.startsWith('/clients')) {
+        $("#nav-clients").addClass("active");
     }
-})
+});

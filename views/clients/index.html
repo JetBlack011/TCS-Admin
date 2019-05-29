@@ -7,39 +7,54 @@
   <body>
     <main role="main">
       <%- include('../includes/navbar') %>
-        <div class="row mx-5">
-          <div class="col">
-            <h1 class="display-4 text-center">Stats</h1>
-            <table class="table">
-              <tbody>
-                <tr>
-                  <th>Clients</th>
-                  <td id="client-count">0</td>
-                </tr>
-                <tr>
-                  <th>Open Tabs</th>
-                  <td id="tab-count">0</td>
-                </tr>
-                <tr>
-                  <th>History Entires</th>
-                  <td id="history-count">0</td>
-                </tr>
-                <tr>
-                  <th>Successful Blocks</th>
-                  <td id="block-count">0</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-8 scrollable">
-              wide
-          </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-push-8">
+          <h1 class="display-4 text-center">Stats</h1>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>Clients</th>
+                <td id="client-count">0</td>
+              </tr>
+              <tr>
+                <th>Open Tabs</th>
+                <td id="tab-count">0</td>
+              </tr>
+              <tr>
+                <th>History Entires</th>
+                <td id="history-count">0</td>
+              </tr>
+              <tr>
+                <th>Successful Blocks</th>
+                <td id="block-count">0</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+        <div class="col-sm-8 col-sm-push-4 scrollable">
+          <% for (var i = 0; i < clients.length; i++) { %>
+          <div class="card">
+            <div class="card-header">
+              Client
+            </div>
+            <div class="card-body">
+              <h5 class="card-title"><%= clients[i].ips[0] %></h5>
+              <% if (clients[i].note) { %>
+              <p class="card-text">Note: <%= clients[i].note %></p>
+              <% } else { %>
+              <p class="card-text">No note yet.</p>
+              <% } %>
+              <a href="/clients/<%= clients[i].id %>" class="btn btn-success btn-primary">View details »</a>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
     </main>
     <%- include('../includes/footer') %>
   </body>
   <script>
-  function refresh() {
+  function refreshStats() {
     $.getJSON("/clients/stats", function (data) {
       $("#client-count").text(data.clientCount);
       $("#tab-count").text(data.tabCount);
@@ -47,7 +62,7 @@
       $("#block-count").text(data.blockCount);
     })
   }
-  refresh();
-  setInterval(refresh, 1000);
+  refreshStats();
+  setInterval(refreshStats, 1000);
   </script>
 </html>

@@ -9,8 +9,8 @@
     <%- include('includes/navbar') %>
 
     <!-- Main jumbotron for landing -->
-    <div class="jumbotron" style="width: 100%">
-      <div class="container" style="margin-top: 20px">
+    <div class="jumbotron">
+      <div class="container">
         <h1 class="display-3">theCoderSchool Admin</h1>
         <p>A simple tool which you can use to block websites and interact with sepcific clients which have the administrative chrome extension installed.</p>
       </div>
@@ -22,17 +22,17 @@
         <div class="col-md-4">
           <h2>Add a Block</h2>
           <p>Adding a website to the Blocklist stores it and prevents all connected clients from loading that page. You can also add a specific functionality to how a given client reacts to a request to the blocked page.</p>
-          <p><a class="btn btn-green btn-secondary down" href="/blocks/add" role="button">View details »</a></p>
+          <p><a class="btn btn-success btn-secondary down" href="/blocks/add" role="button">View details »</a></p>
         </div>
         <div class="col-md-4">
           <h2>List all Block</h2>
           <p>All contents of the Blocklist are visible in one location. Moreover, removing a website from the Blocklist is incredibly simple, and can be done with the push of a button. The change is made instantly, and all connected clients must merely refresh the change in order to no longer be affected by the block.</p>
-          <p><a class="btn btn-green btn-secondary down" href="/blocks/list" role="button">View details »</a></p>
+          <p><a class="btn btn-success btn-secondary down" href="/blocks/list" role="button">View details »</a></p>
         </div>
         <div class="col-md-4">
           <h2>View Clients</h2>
           <p>This tool also allows an admin to view information about all connected clients, and issue specific commands to an individual machine.</p>
-          <p><a class="btn btn-green btn-secondary down" href="/clients" role="button">View details »</a></p>
+          <p><a class="btn btn-success btn-secondary down" href="/clients" role="button">View details »</a></p>
         </div>
       </div>
     </div> <!-- /container -->

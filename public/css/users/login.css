@@ -1,22 +1,27 @@
 /* STRUCTURE */
 
+
+
+/* FORM WRAPPER */
+
 .wrapper {
-    opacity: 0;
     display: flex;
     align-items: center;
     flex-direction: column; 
     justify-content: center;
     width: 100%;
     min-height: 100%;
+    position: absolute;
 	top:0;
 	bottom: 0;
 	left: 0;
 	right: 0;
-    margin: auto;
     overflow: hidden;
+    margin:auto;
+    float:none;
 }
 
-#form-content {
+.form-content {
     -webkit-border-radius: 10px 10px 10px 10px;
     border-radius: 10px 10px 10px 10px;
     background: #fff;
@@ -30,7 +35,7 @@
     text-align: center;
 }
 
-#form-footer {
+.form-footer {
     margin-top: 15px;
     background-color: #f6f6f6;
     border-top: 1px solid #dce8f1;
@@ -40,8 +45,15 @@
     border-radius: 0 0 10px 10px;
 }
 
-#err {
-    font-size: 1.7vh;
+.vertical-center {
+    position: absolute;
+    right: 1vw;
+    top: 50vh;
+}
+
+table {
+    margin: 60px auto;
+    width: 50% !important;
 }
 
 /* FORM TYPOGRAPHY*/

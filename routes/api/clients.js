@@ -46,13 +46,20 @@ router.get('/clients/connect', (req, res, next) => {
     client.isOnline = true
     client.save((err, client) => {
         if (err) { return next(err) }
-        commands[client._id] = {}
-        res.send(client._id)
+        commands[client.id] = {}
+        res.send(client.id)
     })
 })
 
 router.get('/clients/:id', auth.user, validId, (req, res) => {
-    res.render('clients/client.html', req.client)
+    res.render('clients/client.html', { _client: req.client })
+})
+
+router.post('/clients/:id/note', auth.user, validId, (req, res) => {
+    Client.findByIdAndUpdate(req.client.id, { note: req.body.note }, err => {
+        if (err) { return next(err) }
+        res.render('clients/client.html', { _client: req.client, msg: "Success! Note added." })
+    })
 })
 
 router.get('/clients/:id/disconnect', (req, res) => {
@@ -63,16 +70,16 @@ router.get('/clients/:id/disconnect', (req, res) => {
 })
 
 router.get('/clients/:id/bulletin', validId, (req, res) => {
-    res.json(commands[req.client._id])
+    res.json(commands[req.client.id])
 })
 
 router.post('/clients/:id/bulletin', auth.user, validId, (req, res) => {
     if (req.body.code) {
-        commands[req.client._id].push({
+        commands[req.client.id].push({
             code: req.body.code,
             args: req.body.args
         })
-        res.render('clients/client.html', { client: req.client, msg: "Command issued" })
+        res.render('clients/client.html', { _client: req.client, msg: "Command issued" })
     } else {
         res.render('clients/client.html', { err: "Invalid command code" })
     }
@@ -82,10 +89,10 @@ router.post('/clients/:id/respond', validId, (req, res) => {
     var results = req.body.results
     for (var i = 0; i < results.length; i++) {
         if (results[i].success) {
-            delete commands[req.client._id][i]
+            delete commands[req.client.id][i]
         }
     }
-    commands[req.client._id] = commands[req.client._id].filter(el => {
+    commands[req.client.id] = commands[req.client.id].filter(el => {
         return el
     })
 })
