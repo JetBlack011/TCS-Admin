@@ -1,11 +1,20 @@
-.scrollable {
-    height: 90vh;
+html {
     overflow-y: scroll;
+}
+
+@media screen and (max-width: 770px) {
+    h6 {
+        font-size: 75%;
+    }
+
+    p {
+        font-size: 75%;
+    }
 }
 
 .card {
     margin: 10px 0px 10px 50px;
-    width: 35rem;
+    width: auto;
 }
 
 @media screen and (max-width: 770px) {
@@ -15,7 +24,12 @@
 }
 
 table {
-    margin: 0 50px 0 50px;
+    table-layout: fixed;
+    margin: 0 100px 0 0;
+}
+
+th,td {
+    word-wrap: break-word;
 }
 
 @media screen and (max-width: 770px) {

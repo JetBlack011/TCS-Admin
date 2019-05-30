@@ -55,10 +55,21 @@ router.get('/clients/:id', auth.user, validId, (req, res) => {
     res.render('clients/client.html', { _client: req.client })
 })
 
-router.post('/clients/:id/note', auth.user, validId, (req, res) => {
-    Client.findByIdAndUpdate(req.client.id, { note: req.body.note }, err => {
+router.post('/clients/:id/editInfo', auth.user, validId, (req, res) => {
+    Client.findByIdAndUpdate(req.client.id, {
+        name: req.body.name,
+        note: req.body.note
+    }, err => {
         if (err) { return next(err) }
-        res.render('clients/client.html', { _client: req.client, msg: "Success! Note added." })
+        if (req.body.name) {
+            res.render('clients/client.html', {
+                _client: req.client, msg: req.body.note ? "Success! Name changed and note added." : "Success! Name changd and note cleared."
+            })
+        } else {
+            res.render('clients/client.html', {
+                _client: req.client, msg: req.body.note ? "Success! Note added." : "Success! Note cleared."
+            })
+        }
     })
 })
 

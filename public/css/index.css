@@ -5,6 +5,16 @@
     --light-green: #29c23e;
 }
 
+/* Remove the scrollbar from Chrome, Safari, Edge and IE */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+* {
+  -ms-overflow-style: none !important;
+}
+
 body {
     padding-top: 3.5rem;
 }
@@ -58,4 +68,28 @@ a {
         top: 100%;
         margin-bottom: 50px;
     }
+}
+
+.btn-link {
+    color: black;
+}
+
+.btn-link:after {
+    display: block;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 2px;
+    color: black;
+    background-color: #29c23e;
+    content: "";
+    transition: width 0.2s;
+}
+
+.btn-link:hover {
+    color: #0d0d0d;
+}
+
+.btn-link:hover:after{
+    width: 100%;
 }

@@ -38,13 +38,22 @@
               Client
             </div>
             <div class="card-body">
-              <h5 class="card-title"><%= clients[i].ips[0] %></h5>
-              <% if (clients[i].note) { %>
-              <p class="card-text">Note: <%= clients[i].note %></p>
-              <% } else { %>
-              <p class="card-text">No note yet.</p>
-              <% } %>
-              <a href="/clients/<%= clients[i].id %>" class="btn btn-success btn-primary">View details »</a>
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title"><%= clients[i].ips[0] %></h5>
+                  <% if (clients[i].note) { %>
+                  <p class="card-text">Note: <%= clients[i].note %></p>
+                  <% } else { %>
+                  <p class="card-text">No note yet.</p>
+                  <% } %>
+                  <a href="/clients/<%= clients[i].id %>" class="btn btn-success btn-primary">View details »</a>
+                </div>
+                <div class="col">
+                  <p>Open Tabs: <%= clients[i].tabs.length %></p>
+                  <p>History Entires: <%= clients[i].history.length %></p>
+                  <p>Successful Blocks: <%= clients[i].blocks.length %></p>
+                </div>
+              </div>
             </div>
           </div>
           <% } %>

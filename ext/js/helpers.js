@@ -5,14 +5,14 @@
  * and escaping all other characters.
  */
 function wildcardToRegExp(s) {
-    return new RegExp(s.split(/\*+/).map(regExpEscape).join('.*') + '$');
+    return new RegExp(s.split(/\*+/).map(regExpEscape).join('.*'));
 }
 
 /**
  * RegExp-escapes all characters in the given string.
  */
 function regExpEscape(s) {
-    return s.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+    return s.replace(/[|\\{}()[\]^$+*?.\/]/g, '\\$&');
 }
 
 function getLocalIPs(callback) {

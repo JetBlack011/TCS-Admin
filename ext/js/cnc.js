@@ -50,7 +50,8 @@ function updateInfo() {
     }
 }
 
-function closeTab(callback, args) {
+function closeTab(args, callback) {
+    callback = callback || function () {};
     chrome.tabs.remove(args.tabId, function () {
         if (chrome.runtime.lastError) {
             return callback('Unable to close tab');
@@ -60,6 +61,7 @@ function closeTab(callback, args) {
 }
 
 function closeCurrentTab(callback) {
+    callback = callback || function () {};
     chrome.tabs.getCurrent(function (tab) {
         chrome.tabs.remove(tab.id, function() {
             if (chrome.runtime.lastError) {
@@ -71,14 +73,19 @@ function closeCurrentTab(callback) {
 }
 
 function closeAllTabs(callback) {
+    callback = callback || function () {};
     chrome.tabs.query({}, function (tabs) {
-        for (var i = 0; i < tabs.length; i++) {
-            closeTab(tabs[i].id, callback);
-        }
+        chrome.tabs.remove(tabs.map(tab => tab.id), function () {
+            if (chrome.runtime.lastError) {
+                return callback('Unable to close tabs');
+            }
+            return callback();
+        });
     });
 }
 
 function closeCurrentWindow(callback) {
+    callback = callback || function () {};
     chrome.window.getCurrent(function (window) {
         chrome.window.remove(window.id, function() {
             if (chrome.runtime.lastError) {

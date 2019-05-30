@@ -2,101 +2,153 @@
 <html>
   <head>
     <%- include('../includes/header') %>
-    <link rel="stylesheet" href="/public/css/clients/index.css">
-    <script src="/public/js/json-formatter.js"></script>
+    <link rel="stylesheet" href="/public/css/clients/client.css">
   </head>
   <body>
     <main role="main">
       <%- include('../includes/navbar') %>
       <div class="jumbotron text-center">
         <div class="container">
+          <% if (_client.name) { %>
+          <h1 class="display-3"><%= _client.name %></h1>
+          <% } else { %>
           <h1 class="display-3">Client</h1>
+          <% } %>
           <% if (_client.note) { %>
           <p><%= _client.note %></p>
-          <button class="btn btn-success" data-toggle="modal" data-target="#note-modal">Edit</button>
+          <button class="btn btn-success" data-toggle="modal" data-target="#info-modal">Edit</button>
           <% } else { %>
           <p>No note yet.</p>
-          <button class="btn btn-success" data-toggle="modal" data-target="#note-modal">Add One</button>
+          <button class="btn btn-success" data-toggle="modal" data-target="#info-modal">Add One</button>
           <% } %>
         </div>
       </div>
-      <div id="accordion">
-        <div class="card">
-          <div class="card-header" id="heading-blocks">
-            <h5 class="mb-0">
-              <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-blocks" aria-expanded="false" aria-controls="collapse-blocks">
-                Successful Blocks
-              </button>
-            </h5>
-          </div>
-          <div id="collapse-blocks" class="collapse" aria-labelledby="heading-blocks" data-parent="#accordion">
-            <div class="card-body">
-              <%= _client.blocks %>
+      <div class="row">
+        <div class="col-sm-6 col-sm-push-4">
+          <div id="accordion">
+            <div class="card">
+              <div class="card-header" id="heading-tabs">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-tabs" aria-expanded="false" aria-controls="collapse-tabs">
+                    Open Tabs
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse-tabs" class="collapse" aria-labelledby="heading-tabs" data-parent="#accordion">
+                <div class="card-body">
+                  <table class="table table-striped">
+                    <tbody>
+                      <% for (var i = 0; i < _client.tabs.length; i++) { %>
+                      <tr scope="row">
+                        <td style="width:75%;">
+                          <h6><%= _client.tabs[i].title %></h4>
+                          <p><%= _client.tabs[i].url %></p>
+                        </td>
+                        <td style="width:25%;">
+                          <button class="btn btn-danger btn-remove float-right">X</button>
+                        </td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="heading-history">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-history" aria-expanded="false" aria-controls="collapse-history">
+                    Browser History
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse-history" class="collapse" aria-labelledby="heading-history" data-parent="#accordion">
+                <div class="card-body">
+                  <table class="table table-striped">
+                    <tbody>
+                      <% for (var i = 0; i < _client.history.length; i++) { %>
+                        <tr scope="row">
+                          <td>
+                            <h6><%= _client.history[i].title %></h4>
+                            <p><%= _client.history[i].url %></p>
+                          </td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="heading-ips">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-ips" aria-expanded="false" aria-controls="collapse-ips">
+                    IP Addresses
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse-ips" class="collapse" aria-labelledby="heading-ips" data-parent="#accordion">
+                <div class="card-body">
+                    <% for (var i = 0; i < _client.ips.length; i++) { %>
+                      <div>
+                        <p><%= _client.ips[i] %></p>
+                      </div>
+                    <% } %>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="heading-blocks">
+                <h5 class="mb-0">
+                  <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-blocks" aria-expanded="false" aria-controls="collapse-blocks">
+                    Successful Blocks
+                  </button>
+                </h5>
+              </div>
+              <div id="collapse-blocks" class="collapse" aria-labelledby="heading-blocks" data-parent="#accordion">
+                <div class="card-body">
+                  <%= _client.blocks %>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-header" id="heading-tabs">
-            <h5 class="mb-0">
-              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-tabs" aria-expanded="false" aria-controls="collapse-tabs">
-                Open Tabs
-              </button>
-            </h5>
-          </div>
-          <div id="collapse-tabs" class="collapse" aria-labelledby="heading-tabs" data-parent="#accordion">
-            <div class="card-body">
-              <%= _client.tabs %>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header" id="heading-history">
-            <h5 class="mb-0">
-              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-history" aria-expanded="false" aria-controls="collapse-history">
-                Browser History
-              </button>
-            </h5>
-          </div>
-          <div id="collapse-history" class="collapse" aria-labelledby="heading-history" data-parent="#accordion">
-            <div class="card-body">
-                <%= _client.history %>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header" id="heading-ips">
-            <h5 class="mb-0">
-              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-ips" aria-expanded="false" aria-controls="collapse-ips">
-                IP Addresses
-              </button>
-            </h5>
-          </div>
-          <div id="collapse-ips" class="collapse" aria-labelledby="heading-ips" data-parent="#accordion">
-            <div class="card-body">
-                <%= _client.ips %>
-            </div>
-          </div>
+        <div class="col-sm-4 col-sm-push-6">
+          <h4>Commands</h4>
         </div>
       </div>
     </main>
-    <div class="modal fade" id="note-modal" tabindex="-1" role="dialog" aria-labelledby="note-modal-label" aria-hidden="true">
+    <div class="modal fade" id="info-modal" tabindex="-1" role="dialog" aria-labelledby="info-modal-label" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="note-modal-label">Note</h5>
+            <h5 class="modal-title" id="info-modal-label">Info</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form method="POST" action="/clients/<%= _client.id %>/note" role="form">
+          <form method="POST" action="/clients/<%= _client.id %>/editInfo" role="form">
             <div class="modal-body">
               <div class="form-group">
-                  <input type="text" class="form-control" id="note" name="note" placeholder="New Note...">
+                <label for="name">Name</label>
+                <% if (_client.name) { %>
+                <input type="text" class="form-control" id="name" name="name" value="<%= _client.name %>">
+                <% } else { %>
+                <input type="text" class="form-control" id="name" name="name" value="Client">
+                <% } %>
+              </div>
+              <div class="form-group">
+                <label for="note">Note</label>
+                <% if (_client.note) { %>
+                <input type="text" class="form-control" id="note" name="note" value="<%= _client.note %>">
+                <% } else { %>
+                <input type="text" class="form-control" id="note" name="note" placeholder="New Note...">
+                <% } %>
               </div>
             </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-success btn-primary">OK</a>
+            <button type="submit" class="btn btn-success btn-primary btn-ok">OK</a>
           </div>
         </form>
         </div>

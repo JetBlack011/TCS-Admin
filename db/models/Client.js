@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
 
 var clientSchema = new mongoose.Schema({
+    name: String,
     note: String,
     blocks: [{
         url: String,

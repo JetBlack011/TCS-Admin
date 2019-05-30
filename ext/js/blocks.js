@@ -26,10 +26,8 @@ function enforceBlocks() {
             for (var j = 0; j < blocklist.length; j++) {
                 if (tabs[i].url.match(blocklist[j])) {
                     chrome.tabs.remove(tabs[i].id, function() {
-                        if (tabs[i].url) {
-                            successfulBlocks.push(new Block(tabs[i].url));
-                            updateInfo();
-                        }
+                        successfulBlocks.push(new Block(tabs[i].url));
+                        updateInfo();
                         return chrome.runtime.lastError;
                     });
                 }
@@ -42,10 +40,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     for (var i = 0; i < blocklist.length; i++) {
         if (tab.url.match(blocklist[i])) {
             chrome.tabs.remove(tab.id, function() {
-                if (tab.url) {
-                    successfulBlocks.push(new Block(tab.url));
-                    updateInfo();
-                }
+                successfulBlocks.push(new Block(tab.url));
+                updateInfo();
                 return chrome.runtime.lastError;
             });
         }
