@@ -2,6 +2,10 @@ var router = require('express').Router(),
     auth = require('../auth')
     Block = require('mongoose').model('Block')
 
+function log(msg) {
+    console.log(`[*] Blocks: ${msg}`)
+}
+
 router.get('/blocks', (req, res, next) => {
     Block
     .find({ })
@@ -24,15 +28,14 @@ router.post('/blocks/add', auth.user, (req, res, next) => {
         res.render('blocks/add.html', { err: "URL cannot be blank." })
     } else {
         var url = req.body.url.toLowerCase()
-        console.log('Adding new block at ' + url)
-
         var block = new Block()
         block.url = url
         block.save((err, block) => {
             if (err && err.code === 11000) {
-                return res.render('blocks/add.html', { err: "\"" + url + "\" is already in the Blocklist." })
+                return res.render('blocks/add.html', { err: `"${block.url}" is already in the Blocklist.` })
             }
-            res.render('blocks/add.html', { msg: "Success! \"" + url + "\" was added to Blocklist." })
+            log(`Adding ${url} to the Blocklist`)
+            res.render('blocks/add.html', { msg: `Success! "${block.url}" was added to Blocklist.` })
         })
     }
 })
@@ -45,11 +48,12 @@ router.post('/blocks/remove', auth.user, (req, res, next) => {
     if (!req.body.url) {
         res.render('blocks/remove.html', { err: "URL cannot be blank." })
     } else {
-        Block.deleteMany({ url: req.body.url }, (err, data) => {
+        Block.findOneAndDelete({ url: req.body.url }, (err, block) => {
             if (err && err.code === 11000) {
-                return res.render('blocks/remove.html', { err: "\"" + data.url + "\" is not in the Blocklist." })
+                return res.render('blocks/remove.html', { err: `"${block.url}" is not in the Blocklist.` })
             }
-            res.render('blocks/remove.html', { msg: "Success! \"" + data.url + "\" was removed to Blocklist." })
+            log(`Removing ${block.url} from the Blocklist`)
+            res.render('blocks/remove.html', { msg: `Success! "${block.url}" was removed from the Blocklist.` })
         })
     }
 })

@@ -29,7 +29,7 @@ if (isProduction) {
     .catch(err => {
         console.error('Failed to connect to database!\n' + err)
     })
-    mongoose.set('debug', true)
+    //mongoose.set('debug', true)
 }
 
 mongoose.set('useCreateIndex', true)

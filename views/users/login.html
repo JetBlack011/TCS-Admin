@@ -27,21 +27,7 @@
           <a class="underline-hover" href="/forgot">Forgot Password?</a>
         </div>
       </div>
-
-      <!-- Error Display -->
-      <% if (locals.err) { %>
-      <div id="err" class="alert alert-danger fade-in first">
-        <%- err %>
-      </div>
-      <% } %>
-
-      <!-- Information Display -->
-      <% if (locals.msg) { %>
-      <div id="err" class="alert alert-success fadeIn first">
-        <%- msg %>
-      </div>
-      <% } %>
-
     </div>
+    <%- include('../includes/footer') %>
   </body>
 </html>

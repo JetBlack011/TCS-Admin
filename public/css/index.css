@@ -93,3 +93,8 @@ a {
 .btn-link:hover:after{
     width: 100%;
 }
+
+.btn-refresh {
+    margin: 10px 10px 0 10px;
+    border-radius: 100%;
+}

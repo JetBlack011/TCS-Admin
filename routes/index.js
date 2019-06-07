@@ -2,8 +2,7 @@ var router = require('express').Router(),
     auth = require('./auth')
 
 router.head('/', (req, res) => {
-    res.sendStatus(200)
-    
+    res.sendStatus(200)  
 })
 router.get('/', auth.user, (req, res) => {
     res.render('index.html')

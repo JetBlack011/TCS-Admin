@@ -23,29 +23,32 @@
           <% } %>
         </div>
       </div>
+      <div>
+        <button class="btn btn-success btn-refresh" onclick="location.reload();">↻</button>
+      </div>
       <div class="row">
         <div class="col-sm-6 col-sm-push-4">
           <div id="accordion">
             <div class="card">
-              <div class="card-header" id="heading-tabs">
+              <div class="card-header" id="tabs-heading">
                 <h5 class="mb-0">
                   <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-tabs" aria-expanded="false" aria-controls="collapse-tabs">
                     Open Tabs
                   </button>
                 </h5>
               </div>
-              <div id="collapse-tabs" class="collapse" aria-labelledby="heading-tabs" data-parent="#accordion">
+              <div id="collapse-tabs" class="collapse" aria-labelledby="tabs-heading" data-parent="#accordion">
                 <div class="card-body">
-                  <table class="table table-striped">
+                  <table class="table table-striped" id="tabs-table">
                     <tbody>
                       <% for (var i = 0; i < _client.tabs.length; i++) { %>
                       <tr scope="row">
                         <td style="width:75%;">
-                          <h6><%= _client.tabs[i].title %></h4>
+                          <h6><%= _client.tabs[i].title %></h6>
                           <p><%= _client.tabs[i].url %></p>
                         </td>
                         <td style="width:25%;">
-                          <button class="btn btn-danger btn-remove float-right">X</button>
+                          <button class="btn btn-danger btn-remove float-right" onclick="postCommand('closeTab', { tabId: <%= _client.tabs[i].id %> });">X</button>
                         </td>
                       </tr>
                       <% } %>
@@ -55,21 +58,21 @@
               </div>
             </div>
             <div class="card">
-              <div class="card-header" id="heading-history">
+              <div class="card-header" id="history-heading">
                 <h5 class="mb-0">
                   <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-history" aria-expanded="false" aria-controls="collapse-history">
                     Browser History
                   </button>
                 </h5>
               </div>
-              <div id="collapse-history" class="collapse" aria-labelledby="heading-history" data-parent="#accordion">
+              <div id="collapse-history" class="collapse" aria-labelledby="history-heading" data-parent="#accordion">
                 <div class="card-body">
-                  <table class="table table-striped">
+                  <table class="table table-striped" id="history-table">
                     <tbody>
                       <% for (var i = 0; i < _client.history.length; i++) { %>
                         <tr scope="row">
                           <td>
-                            <h6><%= _client.history[i].title %></h4>
+                            <h6><%= _client.history[i].title %></h6>
                             <p><%= _client.history[i].url %></p>
                           </td>
                         </tr>
@@ -80,41 +83,110 @@
               </div>
             </div>
             <div class="card">
-              <div class="card-header" id="heading-ips">
+              <div class="card-header" id="ips-heading">
                 <h5 class="mb-0">
                   <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse-ips" aria-expanded="false" aria-controls="collapse-ips">
                     IP Addresses
                   </button>
                 </h5>
               </div>
-              <div id="collapse-ips" class="collapse" aria-labelledby="heading-ips" data-parent="#accordion">
+              <div id="collapse-ips" class="collapse" aria-labelledby="ips-heading" data-parent="#accordion">
                 <div class="card-body">
-                    <% for (var i = 0; i < _client.ips.length; i++) { %>
-                      <div>
-                        <p><%= _client.ips[i] %></p>
-                      </div>
-                    <% } %>
+                    <table class="table table-striped" id="history-table">
+                      <tbody>
+                        <% for (var i = 0; i < _client.ips.length; i++) { %>
+                          <tr scope="row">
+                            <td>
+                              <h6><%= _client.ips[i] %></h6>
+                            </td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
                 </div>
               </div>
             </div>
             <div class="card">
-              <div class="card-header" id="heading-blocks">
+              <div class="card-header" id="blocks-heading">
                 <h5 class="mb-0">
                   <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-blocks" aria-expanded="false" aria-controls="collapse-blocks">
                     Successful Blocks
                   </button>
                 </h5>
               </div>
-              <div id="collapse-blocks" class="collapse" aria-labelledby="heading-blocks" data-parent="#accordion">
+              <div id="collapse-blocks" class="collapse" aria-labelledby="blocks-heading" data-parent="#accordion">
                 <div class="card-body">
-                  <%= _client.blocks %>
+                    <table class="table table-striped" id="history-table">
+                      <tbody>
+                        <% if (_client.blocks.length === 0) { %>
+                          <p>No blocks yet.</p>
+                        <% } else { %>
+                          <% for (var i = 0; i < _client.blocks.length; i++) { %>
+                            <tr scope="row">
+                              <td>
+                                <h6><%= _client.blocks[i].title %></h6>
+                                <p><%= _client.blocks[i].url %></p>
+                              </td>
+                              <td>
+                                <p><%= _client.blocks[i].timestamp.toLocaleString() %></p>
+                              </td>
+                            </tr>
+                          <% } %>
+                        <% } %>
+                      </tbody>
+                    </table>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="col-sm-4 col-sm-push-6">
-          <h4>Commands</h4>
+          <div class="nav-item dropdown" style="margin: 10px 0 10px 0;">
+            <a class="btn btn-secondary dropdown-toggle" href="#" id="commands-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Commands</a>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="commands-dropdown">
+              <li>
+                <a class="dropdown-item" onclick="postCommand('closeActiveTab')" href="#">Close Active Tab</a>
+              </li>
+              <!--
+              <li>
+                <a class="dropdown-item" onclick="postCommand('closeAllTabs')" href="#">Close All Tabs</a>
+              </li>
+              -->
+              <li>
+                <a class="dropdown-item" onclick="postCommand('closeActiveWindow')" href="#">Close Active Window</a>
+              </li>
+            </ul>
+          </div>
+          <table class="table table-striped">
+            <thead class="thead-dark">
+              <tr>
+                <th>Code</th>
+                <th>Arguments</th>
+              </tr>
+            </thead>
+            <tbody class="commands-body">
+                <% if (!commands || commands.length === 0) { %>
+                  <tr>
+                    <td>
+                        No commands issued yet!
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                <% } else { %>
+                  <% for (var i = 0; i < commands.length; i++) { %>
+                    <tr>
+                      <td>
+                        <%= commands[i].code %>
+                      </td>
+                      <td>
+                        <%= commands[i].args ? JSON.stringify(commands[i].args) : "..." %>
+                      </td>
+                    </tr>
+                  <% } %>
+                <% } %>
+            </tbody>
+          </table>
         </div>
       </div>
     </main>
@@ -154,6 +226,68 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-label">Info</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-primary btn-ok" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <%- include('../includes/footer') %>
   </body>
+  <script>
+  function postCommand(code, args) {
+    $.post(window.location.pathname + '/bulletin', {
+      data: JSON.stringify({
+        code: code,
+        args: args
+      })
+    })
+    .done(function () {
+      $('#modal-label').text('Info');
+      $('#modal').modal('show');
+      $('#modal').find('div.modal-body').text('Command posted successfully.');
+      
+      /*
+      if ($("#commands").children().length === 0) {
+        $("#commands")
+        .append($("<table>")
+          .addClass("table table-striped")
+          .append($("<thead>")
+            .addClass('thead-dark')
+            .
+          )
+          .append($("<tbody>")
+            .append($("<tr>")
+              .attr("scope", "row")
+              .append($("<td>")
+                .append($("<h6>")
+                  .text(code)
+                )
+                .append($("<p>")
+                  .text(""))
+              )
+            )
+          )
+        )
+      }
+      */
+    })
+    .fail(function () {
+      $('#modal-label').text('Error');
+      $('#modal').modal('show');
+      $('#modal').find('div.modal-body').text('Unable to post command.');
+    });
+  }
+  </script>
 </html>

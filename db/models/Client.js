@@ -4,6 +4,7 @@ var clientSchema = new mongoose.Schema({
     name: String,
     note: String,
     blocks: [{
+        title: String,
         url: String,
         timestamp: Date
     }],

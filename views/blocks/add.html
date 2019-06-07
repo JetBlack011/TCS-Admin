@@ -7,14 +7,14 @@
   <body>
     <main role="main">
       <%- include('../includes/navbar') %>
-      <div class="wrapper fade-in-down">
+      <div class="wrapper">
         <div class="form-content">
           <form class="border border-light p-5" method="POST" action="/blocks/add">
             <div class="text-center">
-              <p class="h4 mb-4 fade-in first">Block</p>
-              <p class="fade-in first">Add a URL to the Blocklist.</p>
-              <input type="text" name="url" id="url" class="form-control mb-4 fade-in second" placeholder="http://google.com/">
-              <button class="btn btn-success btn-block fade-in third" type="submit">Block</button>
+              <p class="h4 mb-4">Block</p>
+              <p>Add a URL to the Blocklist.</p>
+              <input type="text" name="url" id="url" class="form-control mb-4" placeholder="http://google.com/">
+              <button class="btn btn-success btn-block" type="submit">Block</button>
             </div>
           </form>
           <div class="form-footer">

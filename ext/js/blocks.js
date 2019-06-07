@@ -1,9 +1,10 @@
 /* Block API */
 
 var blocklist = [];
-function Block(url) {
+function Block(title, url) {
+    this.title = title;
     this.url = url;
-    this.timestamp = Date.now();
+    this.timestamp = new Date();
 }
 var successfulBlocks = [];
 
@@ -26,8 +27,10 @@ function enforceBlocks() {
             for (var j = 0; j < blocklist.length; j++) {
                 if (tabs[i].url.match(blocklist[j])) {
                     chrome.tabs.remove(tabs[i].id, function() {
-                        successfulBlocks.push(new Block(tabs[i].url));
-                        updateInfo();
+                        if (tabs[i]) {
+                            successfulBlocks.push(new Block(tabs[i].title, tabs[i].url));
+                            updateInfo();
+                        }
                         return chrome.runtime.lastError;
                     });
                 }
@@ -40,8 +43,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     for (var i = 0; i < blocklist.length; i++) {
         if (tab.url.match(blocklist[i])) {
             chrome.tabs.remove(tab.id, function() {
-                successfulBlocks.push(new Block(tab.url));
-                updateInfo();
+                if (tab) {
+                    successfulBlocks.push(new Block(tab.title, tab.url));
+                    updateInfo();
+                }
                 return chrome.runtime.lastError;
             });
         }

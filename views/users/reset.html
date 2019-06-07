@@ -10,24 +10,21 @@
       <%- include('../includes/navbar') %>
       <div class="wrapper">
           <div class="form-content">
-            <form class="border border-light p-5" method="POST" action="/users/register">
+            <form class="border border-light p-5" method="POST" action="/users/reset">
               <div class="text-center">
-                <p class="h4 mb-4">Register</p>
-                <p>Create a brand new TCS-Admin user.</p>
+                <p class="h4 mb-4">Reset</p>
+                <p>Change a user's password.</p>
                 <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" name="email" id="email" class="form-control mb-4" placeholder="christine@thecoderschool.com">
+                  <label for="email">User</label>
+                  <select class="form-control" name="email" id="email">
+                  <% for (var i = 0; i < users.length; i++) { %>
+                    <option><%= users[i].email %></option>
+                  <% } %>
+                  </select>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                   <input type="password" name="password" id="password" class="form-control mb-4">
-                </div>
-                <div class="form-group">
-                    <label for="role">Role</label>
-                    <select class="form-control" name="role" id="role">
-                      <option>User</option>
-                      <option>Admin</option>
-                    </select>
                 </div>
                 <div class="form-group">
                   <button class="btn btn-success btn-block" type="submit">Submit</button>

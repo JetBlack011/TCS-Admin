@@ -13,7 +13,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-success btn-primary btn-ok" href="/logout">OK</a>
+        <a class="btn btn-success btn-primary btn-ok" href="/users/logout">OK</a>
       </div>
     </div>
   </div>
@@ -72,7 +72,7 @@
     });
 
     function reloadNote() {
-      if (location.pathname.endsWith('/note')) {
+      if (location.pathname.endsWith('/editInfo')) {
         location.href = location.href.substring(0, location.href.lastIndexOf('/'));
       }
     }

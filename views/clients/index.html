@@ -33,16 +33,21 @@
         </div>
         <div class="col-sm-8 col-sm-push-4 scrollable">
           <% for (var i = 0; i < clients.length; i++) { %>
+          <button class="btn btn-success btn-refresh float-right" onclick="location.reload();">↻</button>
           <div class="card">
             <div class="card-header">
-              Client
+              <%= clients[i].ips[0] %>
             </div>
             <div class="card-body">
               <div class="row">
                 <div class="col">
-                  <h5 class="card-title"><%= clients[i].ips[0] %></h5>
+                  <% if (clients[i].name) { %>
+                  <h5 class="card-title"><%= clients[i].name %></h5>
+                  <% } else { %>
+                  <h5 class="card-title">Client</h5>
+                  <% } %>
                   <% if (clients[i].note) { %>
-                  <p class="card-text">Note: <%= clients[i].note %></p>
+                  <p class="card-text"><%= clients[i].note %></p>
                   <% } else { %>
                   <p class="card-text">No note yet.</p>
                   <% } %>
