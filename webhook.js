@@ -14,11 +14,12 @@ function log(msg) {
 
 http.createServer(function (req, res) {
     req.on('data', function(chunk) {
-        log("Pulling update...")
+        log("Request recieved")
         let sig = "sha1=" + crypto.createHmac('sha1', secret).update(chunk.toString()).digest('hex')
 
         if (req.headers['x-hub-signature'] == sig) {
-            exec('cd ' + repo + ' && git pull');
+            log("Pulling update...")
+            exec('cd ' + repo + ' && git pull')
         }
     });
 
