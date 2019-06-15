@@ -10,7 +10,7 @@ app.set('view engine', 'html')
 
 // Enviornment management
 const isProduction = process.env.NODE_ENV === 'production'
-const PORT = isProduction ? 80 : 8000;
+const PORT = 8000;
 const secret = isProduction ? process.env.SECRET : 'secret'
 
 app.use(require('morgan')(isProduction ? 'tiny' : 'dev'))

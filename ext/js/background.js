@@ -1,4 +1,4 @@
-const url = 'http://127.0.0.1:8000';
+const url = 'http://tcs.admin:8000';
 
 var awake = false;
 var wakeup = null;
@@ -50,3 +50,10 @@ function connect() {
 /* Runtime configuration */
 
 chrome.runtime.onInstalled.addListener(connect);
+chrome.runtime.onStartup.addListener(connect);
+
+chrome.runtime.onUpdateAvailable.addListener(function () {
+    chrome.runtime.reload();
+});
+
+setInterval(connect, 10 * 60 * 1000);

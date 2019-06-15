@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
-var secret = require('../secret')
 var isProduction = process.env.NODE_ENV === 'production'
+var mongodbURI = isProduction ? process.env.MONGODB_URI : require('../secret').mongodbURI
 
 function log(msg) {
     console.log(`[*] DB: ${msg}`)

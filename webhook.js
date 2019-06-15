@@ -1,7 +1,7 @@
 const isProduction = process.env.NODE_ENV === 'production'
 
 var secret = isProduction ? process.env.GIT_SECRET : require('./secret').gitSecret
-var repo = "/home/pi/TCS-Admin"
+var repo = '/home/pi/TCS-Admin'
 
 var http = require('http')
 var crypto = require('crypto')

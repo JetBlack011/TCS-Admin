@@ -1,6 +1,6 @@
 {
     "name": "TCS-Admin",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "manifest_version": 2,
     "description": "This app manages administrative activity on theCoderSchool's Chromebooks",
     "icons": {
@@ -23,6 +23,6 @@
         "tts",
         "history",
         "tabs",
-        "http://127.0.0.1:8000/"
+        "http://tcs.admin:8000/"
     ]
 }
