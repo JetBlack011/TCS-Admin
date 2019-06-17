@@ -56,7 +56,9 @@ if (!isProduction) {
 }
 
 // Configure git webhook
-require('./webhook')
+if (isProduction) {
+    require('./webhook')
+}
 
 // Listen on port 8000 or port 80 based on environment
 app.listen(PORT, function() {

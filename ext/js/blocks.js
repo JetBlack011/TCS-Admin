@@ -1,12 +1,13 @@
 /* Block API */
 
 var blocklist = [];
+var successfulBlocks = [];
+
 function Block(title, url) {
     this.title = title;
     this.url = url;
     this.timestamp = new Date();
 }
-var successfulBlocks = [];
 
 function refreshBlocks() {
     if (awake) {

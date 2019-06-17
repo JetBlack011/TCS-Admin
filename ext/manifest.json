@@ -1,8 +1,8 @@
 {
     "name": "TCS-Admin",
-    "version": "0.0.2",
+    "version": "0.0.1",
     "manifest_version": 2,
-    "description": "This app manages administrative activity on theCoderSchool's Chromebooks",
+    "description": "This extension manages administrative activity on theCoderSchool's Chromebooks",
     "icons": {
         "16": "icons/icon16.png",
         "48": "icons/icon48.png",
