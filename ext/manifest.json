@@ -10,9 +10,9 @@
     },
     "background": {
         "scripts": [
-            "js/jquery/jquery-3.4.1.min.js",
             "js/background.js",
             "js/helpers.js",
+            "js/wsc.js",
             "js/blocks.js",
             "js/cnc.js"
         ],
@@ -23,6 +23,6 @@
         "tts",
         "history",
         "tabs",
-        "http://tcs.admin:8000/"
+        "http://localhost:8000/"
     ]
 }

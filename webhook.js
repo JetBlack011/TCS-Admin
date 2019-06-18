@@ -1,12 +1,10 @@
+var http = require('http'),
+    crypto = require('crypto'),
+    exec = require('child_process').exec,
+    secret = isProduction ? process.env.GIT_SECRET : require('./secret').gitSecret
+
 const isProduction = process.env.NODE_ENV === 'production'
-
-var secret = isProduction ? process.env.GIT_SECRET : require('./secret').gitSecret
-var repo = '/home/pi/TCS-Admin'
-
-var http = require('http')
-var crypto = require('crypto')
-
-const exec = require('child_process').exec
+const repo = '/home/pi/TCS-Admin'
 
 function log(msg) {
     console.log(`[*] Webhook: ${msg}`)

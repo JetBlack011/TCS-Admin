@@ -5,18 +5,21 @@ var express = require('express'),
     app = express(),
     passport = require('passport')
 
-app.engine('html', require('ejs').renderFile)
-app.set('view engine', 'html')
-
 // Enviornment management
 const isProduction = process.env.NODE_ENV === 'production'
 const PORT = 8000;
 const secret = isProduction ? process.env.SECRET : 'secret'
 
+// Configure render middleware
+app.engine('html', require('ejs').renderFile)
+app.set('view engine', 'html')
+
+// Configure request logging
 app.use(require('morgan')(isProduction ? 'tiny' : 'dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// Serve static assets
 app.use(require('method-override')())
 app.use('/public', express.static(__dirname + '/public'))
 
@@ -30,13 +33,13 @@ app.use((req, res, next) => {
     next()
 })
 
-// Routes
+// Configure routes
 app.use(require('./routes'))
 
 // Error handlers
 // Print stack trace
 if (!isProduction) {
-    app.use(function(err, req, res, next) {
+    app.use(function(err, req, res) {
         console.log(err.stack)
         res.status(err.status || 500)
         res.json({'errors': {
@@ -45,8 +48,8 @@ if (!isProduction) {
         }})
     })
 } else {
-    // no stacktraces leaked to user
-    app.use(function(err, req, res, next) {
+    // No stacktraces leaked to user
+    app.use(function(err, req, res) {
         res.status(err.status || 500)
         res.json({'errors': {
             message: err.message,
@@ -54,6 +57,9 @@ if (!isProduction) {
         }})
     })
 }
+
+// Start WebSocket server to handle/maintain incoming client connections
+require('./websocket')
 
 // Configure git webhook
 if (isProduction) {

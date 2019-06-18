@@ -18,8 +18,7 @@ function regExpEscape(s) {
 function getLocalIPs(callback) {
     var ips = [];
 
-    var RTCPeerConnection = window.RTCPeerConnection ||
-        window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+    var RTCPeerConnection = window.RTCPeerConnection;
 
     var pc = new RTCPeerConnection({
         // Don't specify any stun/turn servers, otherwise you will

