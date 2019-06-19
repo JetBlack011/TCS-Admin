@@ -1,6 +1,8 @@
 var mongoose = require('mongoose')
 
 var clientSchema = new mongoose.Schema({
+    ws: Object,
+    isAlive: Boolean,
     name: String,
     note: String,
     blocks: [{
@@ -12,4 +14,5 @@ var clientSchema = new mongoose.Schema({
     history: [Object],
     ips: [String],
 }, {timestamps: true})
+
 module.exports = mongoose.model('Client', clientSchema)

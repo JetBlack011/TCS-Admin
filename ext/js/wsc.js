@@ -1,4 +1,4 @@
-/* WebSocketClient class which handles various protocol cases */
+/* WebSocketClient class which handles various protocol handlers */
 function WebSocketClient(url, reconnectInterval) {
     this.url = url;
     this.handlers = [{
@@ -36,16 +36,16 @@ WebSocketClient.prototype.open = function () {
     this.onmessage = function (e) {
         var data = JSON.parse(e.data);
         log("Message", data);
-        for (var i = 0; i < this.cases.length; i++) {
-            if (this.cases[i].type === data.type) {
-                this.cases[i].handler(data.args);
+        for (var i = 0; i < this.handlers.length; i++) {
+            if (this.handlers[i].type === data.type) {
+                this.handlers[i].handler(data.args);
             }
         }
     }
 }
 
 WebSocketClient.prototype.on = function (type, handler) {
-    this.cases.push({
+    this.handlers.push({
         type: type,
         handler: handler
     })

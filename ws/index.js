@@ -1,5 +1,4 @@
-var WebSocket = require('ws'),
-    wss = new WebSocket.Server({ port: 8080 })
+var wss = require('./wss')
 
 function log(msg) {
     console.log(`[*] WebSocket: ${msg}`)
@@ -14,10 +13,10 @@ wss.on('connection', (ws) => {
     }
 
     ws.on('message', (msg) => {
-        var data = JSON.parse(msg);
+        var data = JSON.parse(msg)
         switch (data.type) {
             case 'greet':
-                if (data.args.id) {
+                if (!data.args.id) {
                     
                 }
         }

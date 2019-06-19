@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+
 var blockSchema = new mongoose.Schema({
     url: {
         type: String,
@@ -6,4 +7,5 @@ var blockSchema = new mongoose.Schema({
         unique: true
     }
 }, {timestamps: true})
+
 module.exports = mongoose.model('Block', blockSchema)
