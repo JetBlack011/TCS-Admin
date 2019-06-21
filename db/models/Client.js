@@ -15,4 +15,19 @@ var clientSchema = new mongoose.Schema({
     ips: [String],
 }, {timestamps: true})
 
-module.exports = mongoose.model('Client', clientSchema)
+const Client = mongoose.model('Client', clientSchema)
+var pipeline = [{
+    $match: {
+        $and: [
+            { "updateDescription.updateFields.isAlive": { $exists: true }},
+            { operationType: "update" }
+        ]
+    }
+}]
+
+Client.watch(pipeline, { fullDocument: 'updateLookup' })
+    .on('change', data => {
+        console.log(new Date(), data)
+    })
+
+module.exports = Client

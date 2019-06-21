@@ -10,7 +10,7 @@ router.get('/blocks', (req, res, next) => {
     Block
     .find({ })
     .exec((err, blocks) => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         var urls = []
         blocks.forEach((block) => {
             urls.push(block.url)
@@ -70,7 +70,7 @@ router.get('/blocks/list/json', (req, res, next) => {
     Block
     .find({ })
     .exec((err, blocks) => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         var urls = []
         blocks.forEach((block) => {
             urls.push(block.url)

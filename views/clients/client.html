@@ -41,7 +41,7 @@
                 <div class="card-body">
                   <table class="table table-striped" id="tabs-table">
                     <tbody>
-                      <% for (var i = 0; i < _client.tabs.length; i++) { %>
+                      <% for (var i = 0; i < _client.tabs.length; ++i) { %>
                       <tr scope="row">
                         <td style="width:75%;">
                           <h6><%= _client.tabs[i].title %></h6>
@@ -69,7 +69,7 @@
                 <div class="card-body">
                   <table class="table table-striped" id="history-table">
                     <tbody>
-                      <% for (var i = 0; i < _client.history.length; i++) { %>
+                      <% for (var i = 0; i < _client.history.length; ++i) { %>
                         <tr scope="row">
                           <td>
                             <h6><%= _client.history[i].title %></h6>
@@ -94,7 +94,7 @@
                 <div class="card-body">
                     <table class="table table-striped" id="history-table">
                       <tbody>
-                        <% for (var i = 0; i < _client.ips.length; i++) { %>
+                        <% for (var i = 0; i < _client.ips.length; ++i) { %>
                           <tr scope="row">
                             <td>
                               <h6><%= _client.ips[i] %></h6>
@@ -121,7 +121,7 @@
                         <% if (_client.blocks.length === 0) { %>
                           <p>No blocks yet.</p>
                         <% } else { %>
-                          <% for (var i = 0; i < _client.blocks.length; i++) { %>
+                          <% for (var i = 0; i < _client.blocks.length; ++i) { %>
                             <tr scope="row">
                               <td>
                                 <h6><%= _client.blocks[i].title %></h6>
@@ -174,7 +174,7 @@
                     </td>
                   </tr>
                 <% } else { %>
-                  <% for (var i = 0; i < commands.length; i++) { %>
+                  <% for (var i = 0; i < commands.length; ++i) { %>
                     <tr>
                       <td>
                         <%= commands[i].code %>

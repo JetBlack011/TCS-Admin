@@ -8,15 +8,10 @@ function SuccessfulBlock(title, url) {
     this.timestamp = new Date();
 }
 
-/* Outgoing protocol definition */
-function requestBlocks() {
-    wsc.do('block')
-}
-
 /* Incoming protocol handler */
 wsc.on('block', function (args) {
     blocklist = [];
-    for (var i = 0; i < args.blocks.length; i++) {
+    for (var i = 0; i < args.blocks.length; ++i) {
         blocklist.push(wildcardToRegExp(args.blocks[i]));
     }
     if (blocklist.length > 0) {
@@ -27,7 +22,7 @@ wsc.on('block', function (args) {
 /* Helper function */
 function enforceBlocks() {
     chrome.tabs.query({}, function (tabs) {
-        for (var i = 0; i < tabs.length; i++) {
+        for (var i = 0; i < tabs.length; ++i) {
             for (var j = 0; j < blocklist.length; j++) {
                 if (tabs[i].url.match(blocklist[j])) {
                     chrome.tabs.remove(tabs[i].id, function() {
@@ -44,7 +39,7 @@ function enforceBlocks() {
 }
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    for (var i = 0; i < blocklist.length; i++) {
+    for (var i = 0; i < blocklist.length; ++i) {
         if (tab.url.match(blocklist[i])) {
             chrome.tabs.remove(tab.id, function() {
                 if (tab) {
@@ -64,7 +59,7 @@ function refreshBlocks() {
     if (isAlive) {
         $.getJSON(`${url}/blocks/list/json`, function (data) {
             blocklist = [];
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; i < data.length; ++i) {
                 blocklist.push(wildcardToRegExp(data[i] + '/'));
             }
         })

@@ -59,7 +59,7 @@ if (!isProduction) {
 }
 
 // Start WebSocketServer to handle/maintain incoming client connections
-require('./ws')
+require('./wss')
 
 // Configure git webhook
 if (isProduction) {

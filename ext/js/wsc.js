@@ -11,7 +11,7 @@ function WebSocketClient(url, reconnectInterval) {
 }
 
 WebSocketClient.prototype.open = function () {
-    WebSocket.call(this.url);
+    WebSocket.call(this, this.url);
 
     this.onopen = function (e) {
         this.isAlive = true;
@@ -36,7 +36,7 @@ WebSocketClient.prototype.open = function () {
     this.onmessage = function (e) {
         var data = JSON.parse(e.data);
         log("Message", data);
-        for (var i = 0; i < this.handlers.length; i++) {
+        for (var i = 0; i < this.handlers.length; ++i) {
             if (this.handlers[i].type === data.type) {
                 this.handlers[i].handler(data.args);
             }

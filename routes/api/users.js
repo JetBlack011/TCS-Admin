@@ -17,13 +17,13 @@ router.get('/login', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
         passport.authenticate('local', (err, user, info) => {
-            if (err) { return next(err) }
+            if (err) return next(err) 
             if (!user) {
                 log("Login failure")
                 return res.render('users/login.html', { err: "Invalid Email or Password." })
             }
             req.logIn(user, err => {
-                if (err) { return next(err) }
+                if (err) return next(err) 
                 log("User logged in")
                 res.redirect('/')
             })
@@ -61,7 +61,7 @@ router.post('/users/register', auth.admin, (req, res, next) => {
 
 router.get('/users/delete', auth.admin, (req, res, next) => {
     User.find({}, (err, users) => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         res.render('users/delete.html', { user: req.user, users: users })
     })
 })
@@ -81,7 +81,7 @@ router.post('/users/delete', auth.admin, (req, res, next) => {
 
 router.get('/users/reset', auth.admin, (req, res) => {
     User.find({}, (err, users) => {
-        if (err) { return next(err) }
+        if (err) return next(err) 
         res.render('users/reset.html', { users: users })
     })
 })
