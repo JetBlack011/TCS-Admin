@@ -6,28 +6,13 @@ function log(msg) {
     console.log(`[*] WebSocket: ${msg}`)
 }
 
-function flatten(handler) {
-    handlers = []
-    for (var h of handler.handlers) {
-        if (h.hasOwnProperty('type')) {
-            handlers.concat(h)
-            continue
-        }
-        handlers.concat(flatten(h))
-    }
-    return handlers
-}
-
 class Handler {
     constructor() {
-        this.handlers = []
+        this.handlers = {}
     }
 
-    on(type, handler) {
-        this.handlers.push({
-            type: type,
-            handler, handler
-        })
+    on(type, ...handlers) {
+        this.handlers[type] = handlers
     }
 
     use(handler) {
@@ -62,13 +47,14 @@ class WebSocketServer {
                         isAlive: true
                     }, (err, client) => {
                         if (err) return log("Error creating new client document")
+                        ws.id = client.id
                         ws.do('id', { id: client.id })
                     })
+                } else {
+                    ws.id = client.id
                 }
+                ws.isAlive = true
             })
-
-            ws.id = query.id
-            ws.isAlive = true
 
             ws.heartbeat = () => {
                 this.isAlive = true
@@ -84,11 +70,9 @@ class WebSocketServer {
             ws.on('message', (msg) => {
                 log("Message recieved")
                 var data = JSON.parse(msg)
-                for (var i = 0; i < this.handlers.length; ++i) {
-                    if (this.handlers[i].type === data.type) {
-                        this.handlers[i].handler(ws, data.args)
-                    }
-                }
+
+                var handlers = this.handlers[data.type]
+                handlers[0](ws, data.args, handlers[1] || function () {}, this)
             })
         })
     }
@@ -113,4 +97,7 @@ class WebSocketServer {
     }
 }
 
-module.exports = WebSocketServer
+module.exports = {
+    Handler: Handler,
+    WebSocketServer: WebSocketServer
+}

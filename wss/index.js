@@ -1,5 +1,4 @@
-var WebSocketServer = require('./wss'),
-    wss = new WebSocketServer(8080, 30),
+var wss = require('./wss').WebSocketServer(),
     Client = require('mongoose').model('Client'),
     Block = require('Block').model('Block')
 
@@ -11,6 +10,8 @@ Client.updateMany({ isAlive: true }, { isAlive: false }, (err, res) => {
     if (err) return log(`Error updating clients in DB, ${err}`)
 })
 
+wss.use(require('./api'))
+
 Block.watch()
 .on('change', () => {
     Block.find({}, (err, blocks) => {
@@ -18,7 +19,5 @@ Block.watch()
         wss.do('block', { blocks: blocks })
     })
 })
-
-
 
 module.exports = wss
