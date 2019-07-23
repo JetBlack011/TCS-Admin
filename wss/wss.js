@@ -16,7 +16,7 @@ class Handler {
     }
 
     use(handler) {
-        this.handlers.concat(flatten(handler))
+        Object.assign(this.handlers, handler.handlers)
     }
 }
 
@@ -26,7 +26,7 @@ class WebSocketServer {
     }
 
     listen(port, callback) {
-        this.ws = new WebSocket.Server({ port: port }, callback)
+        this.wss = new WebSocket.Server({ port: port }, callback)
 
         setInterval(this.ping, pingInterval * 1000)
         this.on('pong', (ws, args) => {
@@ -46,7 +46,7 @@ class WebSocketServer {
                         ws: ws,
                         isAlive: true
                     }, (err, client) => {
-                        if (err) return log("Error creating new client document")
+                        if (err) return log(`Error creating new client document: ${err}`)
                         ws.id = client.id
                         ws.do('id', { id: client.id })
                     })
@@ -81,7 +81,7 @@ class WebSocketServer {
         this.wss.clients.forEach((ws) => {
             if (!ws.isAlive) {
                 Client.findByIdAndUpdate(ws.id, { isAlive: false }, err => {
-                    if (err) log(`${ws.id}: Error updating client's status`)
+                    if (err) log(`${ws.id}: Error updating client's status: ${err}`)
                 })
                 return ws.terminate()
             }
@@ -91,9 +91,9 @@ class WebSocketServer {
     }
 
     do(type, args) {
-        for (var i = 0; i < this.connections.length; ++i) {
-            this.connections[i].do(type, args)
-        }
+        this.wss.clients.map(ws => {
+            ws.do(type, args)
+        })
     }
 }
 

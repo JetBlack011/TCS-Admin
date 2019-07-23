@@ -12,9 +12,9 @@ function log(msg) {
 
 // Enviornment management
 const isProduction = process.env.NODE_ENV === 'production'
-const HTTP_PORT = 8000;
-const WSS_PORT = 8080;
 const secret = isProduction ? process.env.SECRET : 'secret'
+const httpPort = 8000
+const wssPort = 8080
 
 // Configure rendering middleware
 app.engine('html', require('ejs').renderFile)
@@ -32,10 +32,10 @@ app.use('/public', express.static(__dirname + '/public'))
 // Initialize database connection and session middleware
 require('./db')
 app.use(session({ secret: secret, cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }))
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize())
+app.use(passport.session())
 app.use((req, res, next) => {
-    res.locals.user = req.user;
+    res.locals.user = req.user
     next()
 })
 
@@ -69,11 +69,11 @@ if (isProduction) {
 }
 
 // Start WebSocketServer to handle/maintain incoming client connections
-wss.listen(WSS_PORT, () => {
-    log(`WebSocketServer listening on port ${WSS_PORT}`)
+wss.listen(wssPort, () => {
+    log(`WebSocketServer listening on port ${wssPort}`)
 })
 
 // Listen on port 8000 or port 80 based on environment
-app.listen(HTTP_PORT, () => {
-    log(`Web server listening on port ${HTTP_PORT}`)
+app.listen(httpPort, () => {
+    log(`Web server listening on port ${httpPort}`)
 })

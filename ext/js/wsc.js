@@ -1,4 +1,4 @@
-/* WebSocketClient class which handles various protocol handlers */
+/* WebSocketClient class which enforces various protocol handlers */
 function WebSocketClient(url, reconnectInterval) {
     this.url = url;
     this.handlers = [{
